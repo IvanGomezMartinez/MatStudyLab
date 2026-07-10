@@ -8,6 +8,9 @@ codigosRealesNoSubir/
 *.asv
 *.m~
 
+# Python
+__pycache__/
+
 # OS
 .DS_Store
 Thumbs.db

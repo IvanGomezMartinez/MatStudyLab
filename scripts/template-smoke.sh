@@ -57,6 +57,15 @@ if ! grep -q 'docs/templates/LORE.md' README.md; then
   failures=$((failures + 1))
 fi
 
+assert_exists ".agents/skills/matstudylab-bootstrap/SKILL.md"
+assert_exists "scripts/bootstrap-skills.sh"
+assert_exists "docs/agents/command-skill-step-0.md"
+
+if ! ./scripts/test-bootstrap-skills.sh >/dev/null; then
+  echo "FAIL: bootstrap-skills tests" >&2
+  failures=$((failures + 1))
+fi
+
 if [[ "$failures" -gt 0 ]]; then
   echo "Template smoke: $failures failure(s)" >&2
   exit 1

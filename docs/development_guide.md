@@ -82,7 +82,11 @@ From the repository root:
 ./scripts/template-smoke.sh
 ```
 
-Validates staging folders, seed magnitude types under `codes/`, empty catalog (no `.m`), and readable spec/templates. Run after scaffold changes or before release.
+Validates staging folders, seed magnitude types under `codes/`, empty catalog (no `.m`), readable spec/templates, and bootstrap skill tests. Run after scaffold changes or before release.
+
+```bash
+./scripts/test-bootstrap-skills.sh   # bootstrap staleness logic only
+```
 
 ## Local E2E test bank
 
