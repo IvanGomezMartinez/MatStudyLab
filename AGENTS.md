@@ -40,7 +40,7 @@ Installed under `.agents/skills/` per `skills-lock.json`:
 - MATLAB: `matlab`, `matlab-performance-optimizer`
 - `matstudylab-bootstrap` — not user-facing; runs as Step 0 inside `/build`, `/new`, `/modify`, `/accept`, `/explain`
 
-Project commands (`/new`, `/modify`) are **not implemented yet** — T6–T7. **`/accept`**, **`/explain`**, and **`/build`** are implemented (T3–T5).
+All five workflow commands (`/accept`, `/explain`, `/build`, `/new`, `/modify`) are implemented (T3–T7).
 
 ## Before touching code
 

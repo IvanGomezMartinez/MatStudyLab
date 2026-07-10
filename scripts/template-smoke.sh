@@ -61,10 +61,14 @@ assert_exists ".agents/skills/matstudylab-bootstrap/SKILL.md"
 assert_exists ".agents/skills/accept/SKILL.md"
 assert_exists ".agents/skills/explain/SKILL.md"
 assert_exists ".agents/skills/build/SKILL.md"
+assert_exists ".agents/skills/new/SKILL.md"
+assert_exists ".agents/skills/modify/SKILL.md"
 assert_exists "scripts/bootstrap-skills.sh"
 assert_exists "scripts/accept-bundle.sh"
 assert_exists "scripts/explain-resolve.sh"
 assert_exists "scripts/build-import.sh"
+assert_exists "scripts/new-scaffold.sh"
+assert_exists "scripts/modify-copy.sh"
 assert_exists "docs/templates/explain-doc.md"
 assert_exists "docs/agents/command-skill-step-0.md"
 
@@ -85,6 +89,16 @@ fi
 
 if ! ./scripts/test-build-import.sh >/dev/null; then
   echo "FAIL: build-import tests" >&2
+  failures=$((failures + 1))
+fi
+
+if ! ./scripts/test-new-bundle.sh >/dev/null; then
+  echo "FAIL: new-bundle tests" >&2
+  failures=$((failures + 1))
+fi
+
+if ! ./scripts/test-modify-bundle.sh >/dev/null; then
+  echo "FAIL: modify-bundle tests" >&2
   failures=$((failures + 1))
 fi
 
