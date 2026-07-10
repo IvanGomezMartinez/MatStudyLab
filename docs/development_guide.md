@@ -73,7 +73,7 @@ Vendored in `.agents/skills/` per `skills-lock.json`:
 - Pocock engineering skills (`implement`, `to-tickets`, `grill-me`, …)
 - `matlab`, `matlab-performance-optimizer` — manually vendored; **mandatory for `/new` and `/modify`** (read both `SKILL.md` files). Bootstrap auto-sync for these: **deferred**.
 
-All five workflow commands implemented (T3–T7). Next: **ticket 22** E2E validation.
+All five workflow commands implemented (T3–T7). **T8 E2E** — see [E2E pipeline validation](#e2e-pipeline-validation-t8) below.
 
 ## Template smoke (T1)
 
@@ -92,7 +92,53 @@ Validates staging folders, seed magnitude types under `codes/`, empty catalog (n
 ./scripts/test-build-import.sh       # /build scan, catalog, homonym
 ./scripts/test-new-bundle.sh          # /new scaffold and naming
 ./scripts/test-modify-bundle.sh       # /modify catalog copy mirror
+./scripts/test-e2e-pipeline.sh       # T8 import → build → explain → accept
 ```
+
+## E2E pipeline validation (T8)
+
+Validates the full workflow seam: **`import/` → `/build` → `/explain` → `/accept modify`** with safety assertions. Does **not** run MATLAB or assert numerical correctness.
+
+### Automated (committed fixture)
+
+```bash
+./scripts/test-e2e-pipeline.sh
+```
+
+Uses `scripts/fixtures/e2e/iol_profiles_bundle/synthetic_iol_profile.m` copied into a temp workspace:
+
+| Step | Simulates | Asserts |
+|------|-----------|---------|
+| `/build` | `catalog_from_import` → `codes/iol-profiles/synthetic_iol_profile/` | `import/` cleared for cataloged bundle; base `.md` drafted |
+| `/explain` | `explain_*.md` under `explain/` | **No in-situ edit** of `.m` in `codes/` |
+| `/accept modify` | `modify-copy` + `accept_bundle` | `explain_*.md` attached in catalog; `modify/` cleared |
+
+Orchestration: `scripts/lib/e2e_pipeline.py`.
+
+### Manual lab subset (optional, local only)
+
+When `codigosRealesNoSubir/` exists on your machine:
+
+1. Copy **one small folder** (e.g. a single-bundle candidate under `PERFILES_IOLs/`) into `import/<type>/<bundle>/`.
+2. Run `/build` with grill-me and confirm `iol-profiles/` (or the right magnitude).
+3. Run `/explain` on the cataloged `.m`.
+4. Run `/accept modify` to attach the study doc.
+
+**Do not commit** `codigosRealesNoSubir/` or cataloged proprietary `.m` files. Ticket 10 (full inventory) remains deferred.
+
+### Safety assertions (verified by E2E)
+
+- AI never edits `codes/` in situ — only via confirmed `/build` catalog or `/accept` promotion.
+- `/explain` writes only under `explain/`; catalog `.m` bytes unchanged during explain.
+- `/build` deletes from `import/` only what was cataloged in the session.
+- Measurement data moves with the bundle folder; no orphan deletion outside the confirmed import tree.
+
+### Known limits
+
+- No automated MATLAB execution or optical numerical validation.
+- `codigosRealesNoSubir/` is gitignored — CI uses the synthetic fixture only.
+- `matlab` / `matlab-performance-optimizer` skills are manually vendored (bootstrap auto-sync deferred).
+- Homonym handling and grill-me gates are skill-level (human/agent); the automated E2E tests the **script seams** only.
 
 ## Local E2E test bank
 

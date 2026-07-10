@@ -102,6 +102,11 @@ if ! ./scripts/test-modify-bundle.sh >/dev/null; then
   failures=$((failures + 1))
 fi
 
+if ! ./scripts/test-e2e-pipeline.sh >/dev/null; then
+  echo "FAIL: e2e-pipeline tests" >&2
+  failures=$((failures + 1))
+fi
+
 if [[ "$failures" -gt 0 ]]; then
   echo "Template smoke: $failures failure(s)" >&2
   exit 1
