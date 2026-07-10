@@ -58,11 +58,18 @@ if ! grep -q 'docs/templates/LORE.md' README.md; then
 fi
 
 assert_exists ".agents/skills/matstudylab-bootstrap/SKILL.md"
+assert_exists ".agents/skills/accept/SKILL.md"
 assert_exists "scripts/bootstrap-skills.sh"
+assert_exists "scripts/accept-bundle.sh"
 assert_exists "docs/agents/command-skill-step-0.md"
 
 if ! ./scripts/test-bootstrap-skills.sh >/dev/null; then
   echo "FAIL: bootstrap-skills tests" >&2
+  failures=$((failures + 1))
+fi
+
+if ! ./scripts/test-accept-bundle.sh >/dev/null; then
+  echo "FAIL: accept-bundle tests" >&2
   failures=$((failures + 1))
 fi
 
