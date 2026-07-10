@@ -38,6 +38,7 @@ Installed under `.agents/skills/` per `skills-lock.json`:
 
 - Pocock engineering: `to-spec`, `to-tickets`, `implement`, `grill-me`, `writing-great-skills`, etc.
 - MATLAB: `matlab`, `matlab-performance-optimizer`
+- `matstudylab-bootstrap` — not user-facing; runs as Step 0 inside `/build`, `/new`, `/modify`, `/accept`, `/explain`
 
 Project command skills (`/build`, `/new`, `/modify`, `/accept`, `/explain`) are **not yet implemented** — see `docs/spec.md` ticket order T1–T8.
 

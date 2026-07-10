@@ -54,7 +54,7 @@ MatStudyLab is a private portfolio/template repository that provides folder stru
 36. As a developer, I want `explain/` as a study staging area separate from `modify/`, so that learning and editing workflows do not collide.
 37. As a developer, I want LORE decision log entries after confirmed folder moves, so that classification history is traceable.
 38. As a developer, I want README and `docs/development_guide.md` to document post-wayfinder workflow (`/to-tickets` → `/implement`), so that the next implementation phase is clear.
-39. As a developer, I want a `matstudylab-bootstrap` skill to sync `skills-lock.json` when stale (>24h), so that vendored skills stay current without manual intervention.
+39. As a developer, I want `matstudylab-bootstrap` to run automatically at the start of every workflow command (`/new`, `/build`, `/accept`, `/explain`, `/modify`) and sync `skills-lock.json` when stale (>24h), so that vendored skills stay current without a separate manual step.
 40. As a developer, I want E2E validation with a subset of `codigosRealesNoSubir/` through `import/` → `/build`, so that the full pipeline is proven on real lab scripts before release.
 
 ## Implementation Decisions
@@ -148,7 +148,8 @@ On first run, if missing from `LORE.md`: companion `.md` language, git workflow 
 ### Skills layout
 
 - Vendored in `.agents/skills/`: Pocock engineering skills, `matlab`, `matlab-performance-optimizer`.
-- `skills-lock.json` committed; bootstrap skill syncs when lockfile >24h stale.
+- `skills-lock.json` committed; includes `last_checked` (ISO timestamp) updated after each successful sync check.
+- **`matstudylab-bootstrap` (T2):** not a user-facing slash command. `disable-model-invocation: true`. Every workflow command skill (T3–T7) **must** start with **Step 0**: read and execute `.agents/skills/matstudylab-bootstrap/SKILL.md` — sync upstream skills when lockfile age >24h, skip when fresh, then proceed.
 - Project command skills (T3–T7): user-invoked, `writing-great-skills` validated, pointers to `docs/templates/` and `LORE.md`.
 
 ### Language policy
@@ -186,7 +187,7 @@ Test **external behavior** of the workflow — folder moves, file presence, safe
 |-------|------|------|
 | **E2E pipeline** | Subset of `codigosRealesNoSubir/` → `import/` → `/build` → `/explain` → `/accept` | T8 — after all command skills exist |
 | **Safety assertions** | Agent session must not create/modify files under `codes/` except via `/accept` or confirmed `/build` move | Every command skill audit |
-| **Bootstrap** | `skills-lock.json` staleness check triggers sync | T2 |
+| **Bootstrap** | Staleness check + sync runs as Step 0 of every workflow command (T3–T7); skipped when lockfile age ≤24h | T2 + every command skill audit |
 | **Template smoke** | Fresh clone has empty `codes/`, scaffold folders, templates, and readable spec | T1 |
 
 ### Prior art

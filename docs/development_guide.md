@@ -53,6 +53,7 @@ T1  Scaffold + AGENTS.md + LORE.md template + docs/templates/
 
 Each command skill:
 
+- **Step 0:** read and execute `matstudylab-bootstrap` (automatic skills sync when stale)
 - User-invoked (`disable-model-invocation: true`)
 - Validated with `writing-great-skills`
 - Steps + completion criteria
