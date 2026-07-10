@@ -59,8 +59,11 @@ fi
 
 assert_exists ".agents/skills/matstudylab-bootstrap/SKILL.md"
 assert_exists ".agents/skills/accept/SKILL.md"
+assert_exists ".agents/skills/explain/SKILL.md"
 assert_exists "scripts/bootstrap-skills.sh"
 assert_exists "scripts/accept-bundle.sh"
+assert_exists "scripts/explain-resolve.sh"
+assert_exists "docs/templates/explain-doc.md"
 assert_exists "docs/agents/command-skill-step-0.md"
 
 if ! ./scripts/test-bootstrap-skills.sh >/dev/null; then
@@ -70,6 +73,11 @@ fi
 
 if ! ./scripts/test-accept-bundle.sh >/dev/null; then
   echo "FAIL: accept-bundle tests" >&2
+  failures=$((failures + 1))
+fi
+
+if ! ./scripts/test-explain-bundle.sh >/dev/null; then
+  echo "FAIL: explain-bundle tests" >&2
   failures=$((failures + 1))
 fi
 

@@ -10,7 +10,7 @@ Private portfolio/template repo for optical lab technicians using AI-assisted MA
 - **Spec contract**: `docs/spec.md` — commands, folders, safety rules, bundle model.
 - **Domain glossary**: `CONTEXT.md` — use defined terms; avoid synonyms listed under _Avoid_.
 - **MATLAB baseline**: `docs/matlab-guidelines.md`; `LORE.md` overrides personal style, never safety rules.
-- **Templates**: `docs/templates/script-companion.md`, `docs/templates/LORE.md`.
+- **Templates**: `docs/templates/script-companion.md`, `docs/templates/explain-doc.md`, `docs/templates/LORE.md`.
 
 ## Safety (non-negotiable)
 
@@ -40,7 +40,7 @@ Installed under `.agents/skills/` per `skills-lock.json`:
 - MATLAB: `matlab`, `matlab-performance-optimizer`
 - `matstudylab-bootstrap` — not user-facing; runs as Step 0 inside `/build`, `/new`, `/modify`, `/accept`, `/explain`
 
-Project commands (`/build`, `/new`, `/modify`, `/explain`) are **not implemented yet** — T5–T7. **`/accept`** is implemented (T3).
+Project commands (`/build`, `/new`, `/modify`) are **not implemented yet** — T5–T7. **`/accept`** and **`/explain`** are implemented (T3–T4).
 
 ## Before touching code
 

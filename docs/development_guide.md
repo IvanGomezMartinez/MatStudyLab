@@ -14,6 +14,7 @@ Supporting docs:
 | [AGENTS.md](../AGENTS.md) | Agent conventions and skills pointers |
 | [matlab-guidelines.md](./matlab-guidelines.md) | MATLAB baseline (trimmed from wayfinder research) |
 | [templates/script-companion.md](./templates/script-companion.md) | Base companion `.md` template |
+| [templates/explain-doc.md](./templates/explain-doc.md) | Deep study `explain_<stem>.md` template |
 | [templates/LORE.md](./templates/LORE.md) | LORE.md template |
 
 ## Wayfinder status
@@ -72,7 +73,7 @@ Vendored in `.agents/skills/` per `skills-lock.json`:
 - Pocock engineering skills (`implement`, `to-tickets`, `grill-me`, …)
 - `matlab`, `matlab-performance-optimizer`
 
-Project commands (`/build`, `/new`, `/modify`, `/accept`, `/explain`) — **`/accept`** implemented (T3); T4–T7 pending.
+Project commands — **`/accept`** and **`/explain`** implemented (T3–T4); `/build`, `/new`, `/modify` pending (T5–T7).
 
 ## Template smoke (T1)
 
@@ -87,6 +88,7 @@ Validates staging folders, seed magnitude types under `codes/`, empty catalog (n
 ```bash
 ./scripts/test-bootstrap-skills.sh   # bootstrap staleness logic only
 ./scripts/test-accept-bundle.sh      # /accept promotion and validation
+./scripts/test-explain-bundle.sh     # /explain paths and scaffold
 ```
 
 ## Local E2E test bank
