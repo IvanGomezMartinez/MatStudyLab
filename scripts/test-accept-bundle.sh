@@ -8,6 +8,7 @@ failures=0
 
 run_python() {
   python3 - "$@" <<'PY'
+import shutil
 import sys
 from pathlib import Path
 
@@ -15,6 +16,7 @@ sys.path.insert(0, "scripts/lib")
 from accept_bundle import (
     BundleRef,
     accept_bundle,
+    accept_explain_attachments,
     list_pending_bundles,
     validate_bundle,
 )
@@ -35,8 +37,6 @@ elif mode == "accept-new":
     attached = accept_bundle(root, bundle)
     print(len(attached))
 elif mode == "accept-modify":
-    import shutil
-
     shutil.copytree(
         root / "new/mtf/sample_bundle",
         root / "modify/mtf/sample_bundle",
@@ -51,6 +51,20 @@ elif mode == "accept-modify":
         if not (root / "codes/mtf/sample_bundle/old.m").exists()
         else "not-replaced"
     )
+elif mode == "accept-explain":
+    (root / "codes/mtf/sample_bundle").mkdir(parents=True, exist_ok=True)
+    shutil.copy2(
+        root / "new/mtf/sample_bundle/through_focus_mtf.m",
+        root / "codes/mtf/sample_bundle/through_focus_mtf.m",
+    )
+    (root / "explain/mtf/sample_bundle").mkdir(parents=True, exist_ok=True)
+    (root / "explain/mtf/sample_bundle/explain_through_focus_mtf.md").write_text(
+        "# Deep study", encoding="utf-8"
+    )
+    attached = accept_explain_attachments(
+        root, type_name="mtf", bundle_name="sample_bundle"
+    )
+    print(len(attached))
 PY
 }
 
@@ -115,6 +129,22 @@ fi
 make_fixture "$tmpdir"
 replace_result="$(run_python "$tmpdir" accept-modify)"
 assert_eq "modify replaces catalog bundle" "replaced" "$replace_result"
+
+make_fixture "$tmpdir"
+explain_only_count="$(run_python "$tmpdir" accept-explain)"
+assert_eq "accept explain attachment count" "1" "$explain_only_count"
+if [[ ! -f "$tmpdir/codes/mtf/sample_bundle/explain_through_focus_mtf.md" ]]; then
+  echo "FAIL: explain doc missing after accept explain" >&2
+  failures=$((failures + 1))
+fi
+if [[ ! -f "$tmpdir/explain/mtf/sample_bundle/explain_through_focus_mtf.md" ]]; then
+  echo "FAIL: explain source removed after accept explain" >&2
+  failures=$((failures + 1))
+fi
+if [[ ! -d "$tmpdir/new/mtf/sample_bundle" ]]; then
+  echo "FAIL: new staging cleared unexpectedly after accept explain" >&2
+  failures=$((failures + 1))
+fi
 
 if [[ "$failures" -gt 0 ]]; then
   echo "accept-bundle tests: $failures failure(s)" >&2

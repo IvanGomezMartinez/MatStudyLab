@@ -90,6 +90,98 @@ def find_explain_attachments(explain_root: Path, stems: list[str]) -> list[Path]
     return found
 
 
+def explain_doc_stem(explain_doc: Path) -> str:
+    if not explain_doc.name.startswith("explain_") or explain_doc.suffix != ".md":
+        raise ValueError(f"not an explain doc: {explain_doc.name}")
+    return explain_doc.stem[len("explain_") :]
+
+
+def find_catalog_script_by_stem(root: Path, stem: str) -> Path | None:
+    matches = sorted(root.glob(f"codes/*/*/{stem}.m"))
+    if len(matches) > 1:
+        raise ValueError(f"ambiguous stem {stem}: multiple catalog matches")
+    return matches[0] if matches else None
+
+
+def resolve_explain_attachment(
+    root: Path, explain_doc: Path
+) -> tuple[str, str, Path]:
+    explain_root = (root / "explain").resolve()
+    resolved = explain_doc.resolve()
+    if explain_root not in resolved.parents:
+        raise ValueError(f"explain doc must be under explain/: {explain_doc}")
+
+    relative = resolved.relative_to(explain_root)
+    stem = explain_doc_stem(resolved)
+
+    if len(relative.parts) >= 3:
+        type_name, bundle_name = relative.parts[0], relative.parts[1]
+    elif len(relative.parts) == 1:
+        script = find_catalog_script_by_stem(root, stem)
+        if script is None:
+            raise ValueError(f"no catalog .m for stem: {stem}")
+        catalog_relative = script.relative_to(root / "codes")
+        type_name, bundle_name = catalog_relative.parts[0], catalog_relative.parts[1]
+    else:
+        raise ValueError(f"cannot resolve catalog bundle for: {relative}")
+
+    catalog_dir = root / "codes" / type_name / bundle_name
+    if not catalog_dir.is_dir():
+        raise ValueError(f"catalog bundle not found: codes/{type_name}/{bundle_name}")
+    if not (catalog_dir / f"{stem}.m").is_file():
+        raise ValueError(f"no matching .m in catalog: {stem}.m")
+
+    return type_name, bundle_name, catalog_dir / explain_doc.name
+
+
+def list_pending_explain_attachments(
+    root: Path,
+    *,
+    type_name: str | None = None,
+    bundle_name: str | None = None,
+) -> list[Path]:
+    explain_root = root / "explain"
+    if not explain_root.is_dir():
+        return []
+
+    docs = sorted(
+        path
+        for path in explain_root.rglob("explain_*.md")
+        if path.is_file() and not path.name.startswith(".")
+    )
+    if not type_name:
+        return docs
+
+    filtered: list[Path] = []
+    for doc in docs:
+        doc_type, doc_bundle, _ = resolve_explain_attachment(root, doc)
+        if doc_type != type_name:
+            continue
+        if bundle_name and doc_bundle != bundle_name:
+            continue
+        filtered.append(doc)
+    return filtered
+
+
+def accept_explain_attachments(
+    root: Path,
+    *,
+    type_name: str | None = None,
+    bundle_name: str | None = None,
+    dry_run: bool = False,
+) -> list[Path]:
+    attached: list[Path] = []
+    for explain_doc in list_pending_explain_attachments(
+        root, type_name=type_name, bundle_name=bundle_name
+    ):
+        _, _, target = resolve_explain_attachment(root, explain_doc)
+        if not dry_run:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(explain_doc, target)
+        attached.append(target)
+    return attached
+
+
 def accept_bundle(root: Path, bundle: BundleRef, *, dry_run: bool = False) -> list[Path]:
     source = bundle.source_path(root)
     destination = bundle.catalog_path(root)

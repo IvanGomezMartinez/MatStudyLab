@@ -36,5 +36,5 @@ Plain-language notes on MATLAB ideas used here (arrays, FFT, indexing, …).
 
 ## Catalog handoff
 
-When ready, run `/accept` to attach this file to the bundle in `codes/<type>/<bundle>/`.
+Run `/accept explain` to attach this file to the bundle in `codes/<type>/<bundle>/`.
 ```

@@ -38,7 +38,7 @@ See [docs/spec.md](docs/spec.md) for the full contract.
 | `/build`   | Scan `import/`, propose bundles, catalog incrementally into `codes/<type>/<bundle>/` |
 | `/new`     | Create a new script + base `.md` in `new/` after guided checklist |
 | `/modify`  | Copy from `codes/` to `modify/`, adapt with guided flow (never edits catalog in place) |
-| `/accept`  | Move approved bundles from `new/` or `modify/` into `codes/`; attach `explain_*.md` |
+| `/accept`  | Promote bundles from `new/` or `modify/` into `codes/`; `/accept explain` attaches study docs from `explain/` |
 | `/explain` | Deep-dive `explain_<stem>.md` — no `.m` changes |
 
 Commands are implemented as user-invoked agent skills under `.agents/skills/` (see [development guide](docs/development_guide.md)).

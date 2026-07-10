@@ -57,7 +57,7 @@ Individual suites:
 
 ## E2E pipeline
 
-Validates **`import/` → `/build` → `/explain` → `/accept modify`** with safety assertions using a committed synthetic fixture:
+Validates **`import/` → `/build` → `/explain` → `/accept explain`** with safety assertions using a committed synthetic fixture:
 
 ```bash
 ./scripts/test-e2e-pipeline.sh
@@ -67,7 +67,7 @@ Validates **`import/` → `/build` → `/explain` → `/accept modify`** with sa
 |------|-----------|---------|
 | `/build` | `catalog_from_import` → `codes/iol-profiles/synthetic_iol_profile/` | `import/` cleared for cataloged bundle; base `.md` drafted |
 | `/explain` | `explain_*.md` under `explain/` | **No in-situ edit** of `.m` in `codes/` |
-| `/accept modify` | `modify-copy` + `accept_bundle` | `explain_*.md` attached in catalog; `modify/` cleared |
+| `/accept explain` | `accept_explain_attachments` | `explain_*.md` copied into catalog bundle |
 
 Orchestration: `scripts/lib/e2e_pipeline.py`. Fixture: `scripts/fixtures/e2e/iol_profiles_bundle/`.
 

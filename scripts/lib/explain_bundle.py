@@ -129,7 +129,7 @@ def scaffold_explain_doc(
 {question_block}
 ## Catalog handoff
 
-Run `/accept` to attach this file to the catalog bundle when ready.
+Run `/accept explain` to attach this file to the catalog bundle when ready.
 """
     target.output_path.write_text(content, encoding="utf-8")
     return target.output_path

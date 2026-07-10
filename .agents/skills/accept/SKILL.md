@@ -1,10 +1,10 @@
 ---
 name: accept
-description: "Promote approved script bundles from new/ or modify/ into the catalog."
+description: "Promote staging bundles into the catalog, or attach explain docs from explain/."
 disable-model-invocation: true
 ---
 
-Move validated bundles from staging (`new/`, `modify/`) into `codes/<type>/<bundle>/`. The only allowed write path into `codes/`.
+The only allowed write path into `codes/`. Two modes: **promote** (`new/` / `modify/`) or **attach** (`explain/` → catalog).
 
 Read `LORE.md` (if present), `docs/spec.md` (`/accept` requirements), and `CONTEXT.md` before acting.
 
@@ -22,6 +22,8 @@ Do not proceed until bootstrap completes (sync, skip, or failed-with-continue).
 | `/accept`, `/accept all` | All pending bundles in `new/` and `modify/` |
 | `/accept new` | Only `new/` |
 | `/accept modify` | Only `modify/` |
+| `/accept explain` | Copy `explain/explain_<stem>.md` into matching `codes/<type>/<bundle>/` |
+| `/accept explain <type> <bundle>` | One catalog bundle only |
 
 **Completion criterion:** variant is identified.
 
@@ -29,24 +31,19 @@ If variant is `all` (or default) **and** both `new/` and `modify/` have pending 
 
 ## Step 2 — Read LORE
 
-Read `LORE.md` for:
-
-- Git workflow (`local-only` or `own-repo`)
-- Folder map context when proposing `codes/<type>/`
+Read `LORE.md` for git workflow (`local-only` or `own-repo`) and folder map context.
 
 If `LORE.md` is missing, assume `local-only` and note it to the user.
 
 **Completion criterion:** git workflow preference is known.
 
-## Step 3 — List and validate pending bundles
+## Step 3 — List and validate scope
 
-Run:
+### Promote (`all` / `new` / `modify`)
 
 ```bash
-./scripts/accept-bundle.sh <variant>
+ACCEPT_DRY_RUN=1 ./scripts/accept-bundle.sh <variant>
 ```
-
-with `ACCEPT_DRY_RUN=1` first to validate without moving, **or** validate each bundle in Python via `scripts/lib/accept_bundle.py` before promotion.
 
 Validation rules:
 
@@ -55,25 +52,35 @@ Validation rules:
 - **1:1:** one `.m` + one `.md` with matching stems
 - **N:1:** multiple `.m` + exactly one base `.md`
 
-**Completion criterion:** every bundle in scope passes validation or the command stops with a clear block reason.
+Promotion also copies matching `explain/explain_<stem>.md` files into the catalog bundle.
+
+### Attach (`explain`)
+
+```bash
+ACCEPT_DRY_RUN=1 ./scripts/accept-bundle.sh explain [type bundle]
+```
+
+For each `explain/explain_<stem>.md`:
+
+- Resolve `codes/<type>/<bundle>/` from path (`explain/<type>/<bundle>/…`) or by unique `codes/*/*/<stem>.m`
+- **Block** if catalog bundle or matching `.m` is missing
+- Copy into catalog; leave the source under `explain/`
+
+**Completion criterion:** every item in scope passes validation or the command stops with a clear block reason.
 
 ## Step 4 — Confirm destination
 
-For each bundle, confirm `codes/<type>/<bundle>/` with the user when type or name is ambiguous. New `codes/<type>/` folders require user confirmation and a row in LORE folder map.
+Confirm ambiguous `codes/<type>/<bundle>/` paths with the user. New `codes/<type>/` folders require user confirmation and a LORE folder-map row.
 
 **Completion criterion:** user confirmed each destination path.
 
-## Step 5 — Promote bundles
-
-Run for real (no dry run):
+## Step 5 — Execute
 
 ```bash
 ./scripts/accept-bundle.sh <variant> [type bundle]
 ```
 
-This moves the full bundle, clears staging, replaces an existing catalog bundle when source is `modify/`, and copies matching `explain/explain_<stem>.md` files into the catalog bundle.
-
-**Completion criterion:** each promoted bundle exists under `codes/` and its staging folder is gone.
+**Completion criterion:** promote — each bundle exists under `codes/` and staging is cleared; attach — each explain doc exists under its catalog bundle.
 
 ## Step 6 — Git per LORE
 

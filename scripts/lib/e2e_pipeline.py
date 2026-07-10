@@ -6,11 +6,11 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
-from accept_bundle import BundleRef, accept_bundle
+from accept_bundle import accept_explain_attachments
 from build_import import catalog_from_import
 from bundle_utils import snapshot_bundle_dir
-from explain_bundle import ExplainTarget, resolve_script, scaffold_explain_doc
-from modify_bundle import catalog_bundle_unchanged, copy_catalog_to_modify
+from explain_bundle import resolve_script, scaffold_explain_doc
+from modify_bundle import catalog_bundle_unchanged
 
 FIXTURE_REL = Path("scripts/fixtures/e2e/iol_profiles_bundle")
 E2E_TYPE = "iol-profiles"
@@ -88,18 +88,15 @@ def run_pipeline(root: Path) -> E2EResult:
     if not catalog_bundle_unchanged(root, E2E_TYPE, E2E_BUNDLE, bundle_snapshot):
         raise AssertionError("codes/ bundle changed during explain (in-situ edit)")
 
-    copy_catalog_to_modify(root, E2E_TYPE, E2E_BUNDLE)
-    bundle = BundleRef("modify", E2E_TYPE, E2E_BUNDLE)
-    attached = accept_bundle(root, bundle)
+    attached = accept_explain_attachments(
+        root, type_name=E2E_TYPE, bundle_name=E2E_BUNDLE
+    )
 
     accepted_explain = catalog_dir / explain_doc.name
     if not accepted_explain.is_file():
         raise AssertionError("accept did not attach explain doc to catalog bundle")
     if not attached:
         raise AssertionError("accept reported no explain attachments")
-
-    if (root / "modify" / E2E_TYPE / E2E_BUNDLE).exists():
-        raise AssertionError("modify staging was not cleared after accept")
 
     return E2EResult(catalog_dir, explain_doc, accepted_explain)
 

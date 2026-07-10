@@ -112,7 +112,7 @@ MatStudyLab/
 | `/build` | Scan `import/` recursively; propose bundles; grill-me; move to `codes/` incrementally; delete only cataloged files from `import/`; draft base `.md`; LORE log |
 | `/new` | Optional hint; mandatory grill-me (5-point checklist); read LORE+AGENTS; codes/ on demand; output `new/<type>/<bundle>/`; matlab skills; recommend `/accept` |
 | `/modify` | One script/session (ask if subscripts); copy codes→modify; grill what changes; update `.md`; recommend `/accept modify` |
-| `/accept` | Variants: default/`all`, `new`, `modify`; move bundles; attach `explain_*.md`; git per LORE (`local-only` vs `own-repo`) |
+| `/accept` | Variants: default/`all`, `new`, `modify`, `explain`; promote staging bundles or attach `explain/explain_*.md` into `codes/`; git per LORE (`local-only` vs `own-repo`) |
 | `/explain` | No `.m` changes; `explain_<stem>.md`; zoom-out heuristics; handoff internally; recommend `/accept` |
 
 ### `/new` pre-code checklist (mandatory via grill-me)

@@ -64,17 +64,17 @@ Required sections (see `docs/templates/explain-doc.md`):
 
 **Completion criterion:** `explain_<stem>.md` exists under `explain/` with all required sections; no `.m` file was modified.
 
-## Step 4 — Recommend `/accept`
+## Step 4 — Recommend `/accept explain`
 
 If a matching bundle exists in `codes/<type>/<bundle>/`, recommend:
 
 ```text
-/accept
+/accept explain
 ```
 
-so `explain_<stem>.md` attaches to the catalog bundle (see `.agents/skills/accept/SKILL.md`).
+or `/accept explain <type> <bundle>` when scope should be one bundle. This copies `explain_<stem>.md` into the catalog (see `.agents/skills/accept/SKILL.md`).
 
-If the script exists only under `explain/` with no catalog bundle, suggest cataloging via `/build` or `/new` first, or accepting when a staging bundle exists.
+If the script has no catalog bundle yet, suggest `/build` or `/new` first, then `/accept` for the staging bundle.
 
 **Completion criterion:** user knows the next command to attach the study doc.
 

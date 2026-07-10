@@ -10,12 +10,12 @@ BUNDLE="${3:-}"
 DRY_RUN="${ACCEPT_DRY_RUN:-0}"
 
 usage() {
-  echo "Usage: $0 [all|new|modify] [type bundle]" >&2
+  echo "Usage: $0 [all|new|modify|explain] [type bundle]" >&2
   exit 1
 }
 
 case "$VARIANT" in
-  all | new | modify) ;;
+  all | new | modify | explain) ;;
   *) usage ;;
 esac
 
@@ -28,13 +28,32 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(sys.argv[1]) / "scripts/lib"))
-from accept_bundle import BundleRef, accept_bundle, list_pending_bundles
+from accept_bundle import (
+    BundleRef,
+    accept_bundle,
+    accept_explain_attachments,
+    list_pending_bundles,
+)
 
 root = Path(sys.argv[1])
 variant = sys.argv[2]
-type_name = sys.argv[3]
-bundle_name = sys.argv[4]
+type_name = sys.argv[3] or None
+bundle_name = sys.argv[4] or None
 dry_run = sys.argv[5] == "1"
+
+if variant == "explain":
+    attached = accept_explain_attachments(
+        root,
+        type_name=type_name,
+        bundle_name=bundle_name,
+        dry_run=dry_run,
+    )
+    if not attached:
+        print("accept: no explain docs to attach")
+        raise SystemExit(0)
+    for path in attached:
+        print(f"accept: attached {path.relative_to(root)}")
+    raise SystemExit(0)
 
 pending = list_pending_bundles(root)
 if type_name and bundle_name:
