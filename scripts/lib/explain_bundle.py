@@ -47,12 +47,7 @@ def explain_output_path(root: Path, script_path: Path) -> Path:
     if relative is None:
         raise ValueError(f"script must live under a known area: {script_path}")
 
-    area = relative.parts[0]
-    if area == WRITE_AREA:
-        parent = Path(*relative.parts[1:-1])
-    else:
-        parent = Path(*relative.parts[1:-1])
-
+    parent = Path(*relative.parts[1:-1])
     return root / WRITE_AREA / parent / f"explain_{stem}.md"
 
 

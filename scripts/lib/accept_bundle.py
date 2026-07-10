@@ -6,6 +6,8 @@ import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from bundle_utils import base_markdown_files
+
 STAGING_AREAS = ("new", "modify")
 
 
@@ -47,14 +49,6 @@ def list_pending_bundles(root: Path) -> list[BundleRef]:
     return bundles
 
 
-def _base_markdown_files(bundle_dir: Path) -> list[Path]:
-    return sorted(
-        path
-        for path in bundle_dir.glob("*.md")
-        if not path.name.startswith("explain_")
-    )
-
-
 def _matlab_files(bundle_dir: Path) -> list[Path]:
     return sorted(bundle_dir.glob("*.m"))
 
@@ -62,7 +56,7 @@ def _matlab_files(bundle_dir: Path) -> list[Path]:
 def validate_bundle(bundle_dir: Path) -> ValidationResult:
     result = ValidationResult(ok=True)
     matlab_files = _matlab_files(bundle_dir)
-    base_markdown = _base_markdown_files(bundle_dir)
+    base_markdown = base_markdown_files(bundle_dir)
 
     if not matlab_files:
         result.errors.append("missing .m file")

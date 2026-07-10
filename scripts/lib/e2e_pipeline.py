@@ -8,6 +8,7 @@ from pathlib import Path
 
 from accept_bundle import BundleRef, accept_bundle
 from build_import import catalog_from_import
+from bundle_utils import snapshot_bundle_dir
 from explain_bundle import ExplainTarget, resolve_script, scaffold_explain_doc
 from modify_bundle import catalog_bundle_unchanged, copy_catalog_to_modify
 
@@ -53,12 +54,7 @@ def seed_import_from_fixture(root: Path) -> Path:
 
 
 def snapshot_bundle(root: Path, type_name: str, bundle_name: str) -> dict[str, str]:
-    bundle_dir = root / "codes" / type_name / bundle_name
-    return {
-        path.name: path.read_text(encoding="utf-8")
-        for path in sorted(bundle_dir.iterdir())
-        if path.is_file()
-    }
+    return snapshot_bundle_dir(root / "codes" / type_name / bundle_name)
 
 
 def run_pipeline(root: Path) -> E2EResult:

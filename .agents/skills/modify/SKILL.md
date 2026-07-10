@@ -13,6 +13,8 @@ Read `LORE.md`, `AGENTS.md`, `docs/spec.md`, `docs/matlab-guidelines.md`, and `C
 Read and execute `.agents/skills/matstudylab-bootstrap/SKILL.md` before any other step.
 Do not proceed until bootstrap completes (sync, skip, or failed-with-continue).
 
+**Completion criterion:** bootstrap outcome identified (fresh, synced, or failed-with-continue).
+
 ## Step 1 — Select bundle and script
 
 - `/modify` without hint → ask which catalog bundle to adapt.
@@ -43,18 +45,7 @@ If base companion `.md` is missing or incomplete, run the full `/new` checklist 
 
 ## Step 4 — Edit in `modify/` only (with MATLAB skills)
 
-Apply changes to `.m` and companion `.md` under `modify/<type>/<bundle>/`.
-
-**Before editing any `.m` file, read and apply both vendored MATLAB skills:**
-
-| Skill | Path | Role |
-|-------|------|------|
-| **matlab** | `.agents/skills/matlab/SKILL.md` | Syntax, scripts, matrices, graphics, best practices |
-| **matlab-performance-optimizer** | `.agents/skills/matlab-performance-optimizer/SKILL.md` | Vectorization, memory, profiling when performance matters |
-
-These skills are **installed manually** in `.agents/skills/` (not synced by `matstudylab-bootstrap` for now — see deferred note below). If either file is missing, stop and tell the user to install them before editing code.
-
-**Completion criterion:** both skill files were read and their guidance applied to the changes.
+Read and apply `docs/agents/matlab-skills-gate.md` before editing any `.m` file.
 
 Then:
 
@@ -83,8 +74,4 @@ Ask whether to promote now or keep iterating:
 
 - Wayfinder spec: `.scratch/matstudylab/issues/07-grilling-comando-modify.md`
 - Companion template: `docs/templates/script-companion.md`
-- MATLAB skills (mandatory): `.agents/skills/matlab/SKILL.md`, `.agents/skills/matlab-performance-optimizer/SKILL.md`
-
-### Deferred
-
-Auto-sync of MATLAB skills via `skills-lock.json` / bootstrap — out of scope for now; skills stay manually vendored.
+- MATLAB skills gate: `docs/agents/matlab-skills-gate.md`

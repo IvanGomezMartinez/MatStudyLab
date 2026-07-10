@@ -56,7 +56,7 @@ Each command skill:
 
 - **Step 0:** read and execute `matstudylab-bootstrap` (automatic skills sync when stale)
 - User-invoked (`disable-model-invocation: true`)
-- Validated with `writing-great-skills`
+- Checked by `./scripts/validate-command-skills.sh` (structure aligned with `writing-great-skills`)
 - Steps + completion criteria
 - Pointers to `docs/templates/` and `LORE.md`
 
@@ -115,6 +115,7 @@ Validates staging folders, seed magnitude types under `codes/`, empty catalog (n
 ./scripts/test-new-bundle.sh          # /new scaffold and naming
 ./scripts/test-modify-bundle.sh       # /modify catalog copy mirror
 ./scripts/test-e2e-pipeline.sh       # T8 import → build → explain → accept
+./scripts/test-e2e-real-bank.sh      # T8 build on codigosRealesNoSubir/ when present
 ```
 
 ## E2E pipeline validation (T8)
@@ -137,7 +138,17 @@ Uses `scripts/fixtures/e2e/iol_profiles_bundle/synthetic_iol_profile.m` copied i
 
 Orchestration: `scripts/lib/e2e_pipeline.py`.
 
-### Manual lab subset (optional, local only)
+### Automated (local real-bank subset, when present)
+
+```bash
+./scripts/test-e2e-real-bank.sh
+```
+
+Runs inside `qa.sh` when `codigosRealesNoSubir/` exists (gitignored). Copies the **smallest** real bundle candidate into a temp workspace and asserts **`import/` → `/build` catalog** only (US40). Skips cleanly when the bank folder is absent (CI clones).
+
+Orchestration: `scripts/lib/e2e_real_bank.py`.
+
+### Manual lab subset (agent-invoked, optional)
 
 When `codigosRealesNoSubir/` exists on your machine:
 

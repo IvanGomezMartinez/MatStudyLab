@@ -5,6 +5,8 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
+from bundle_utils import snapshot_bundle_dir
+
 CATALOG_AREA = "codes"
 STAGING_AREA = "modify"
 
@@ -54,9 +56,4 @@ def copy_catalog_to_modify(
 
 def catalog_bundle_unchanged(root: Path, type_name: str, bundle_name: str, snapshot: dict[str, str]) -> bool:
     bundle_dir = catalog_bundle_path(root, type_name, bundle_name)
-    current = {
-        path.name: path.read_text(encoding="utf-8")
-        for path in sorted(bundle_dir.iterdir())
-        if path.is_file()
-    }
-    return current == snapshot
+    return snapshot_bundle_dir(bundle_dir) == snapshot

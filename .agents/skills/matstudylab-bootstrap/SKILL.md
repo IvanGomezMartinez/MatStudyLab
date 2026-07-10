@@ -25,6 +25,8 @@ From the repository root, run:
 | `bootstrap: WOULD_SYNC` | Dry-run only (`BOOTSTRAP_DRY_RUN=1`) | Tests only — do not use in production |
 | `bootstrap: SYNC_FAILED_CONTINUE` | Sync failed (network, auth, or CLI missing) | **Warn the user**; proceed with vendored skills already in `.agents/skills/` |
 
+When sync fails, the script still exits 0 after printing `bootstrap: OK` — treat `SYNC_FAILED_CONTINUE` as a warning, not a hard stop.
+
 **Completion criterion:** you have identified which branch ran and told the user when sync failed.
 
 ## Step 3 — Continue workflow
@@ -37,6 +39,7 @@ Proceed with the parent command only after Step 2.
 
 - Lockfile: `skills-lock.json` (`last_checked` ISO timestamp, updated every run)
 - Staleness threshold: **24 hours** (see `scripts/lib/skills_bootstrap.py`)
-- Project-owned skills (`matstudylab-bootstrap`, future command skills) are **not** in the lockfile — only upstream catalog skills sync
+- Upstream catalog skills sync via `npx skills@latest update`; project command skills (`matstudylab-bootstrap`, `accept`, `build`, `new`, `modify`, `explain`) are **not** updated by that command
+- `matlab` and `matlab-performance-optimizer` are listed in the lockfile for inventory but **bootstrap does not sync them** — install manually (see `docs/agents/matlab-skills-gate.md`)
 - Step 0 contract for new command skills: `docs/agents/command-skill-step-0.md`
 - Spec: `docs/spec.md` — Skills layout, T2

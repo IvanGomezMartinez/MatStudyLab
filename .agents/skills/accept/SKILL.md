@@ -13,6 +13,8 @@ Read `LORE.md` (if present), `docs/spec.md` (`/accept` requirements), and `CONTE
 Read and execute `.agents/skills/matstudylab-bootstrap/SKILL.md` before any other step.
 Do not proceed until bootstrap completes (sync, skip, or failed-with-continue).
 
+**Completion criterion:** bootstrap outcome identified (fresh, synced, or failed-with-continue).
+
 ## Step 1 — Parse variant
 
 | User input | Scope |

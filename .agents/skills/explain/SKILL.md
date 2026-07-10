@@ -13,6 +13,8 @@ Read `LORE.md`, `AGENTS.md`, `docs/spec.md`, and `CONTEXT.md` before acting. Use
 Read and execute `.agents/skills/matstudylab-bootstrap/SKILL.md` before any other step.
 Do not proceed until bootstrap completes (sync, skip, or failed-with-continue).
 
+**Completion criterion:** bootstrap outcome identified (fresh, synced, or failed-with-continue).
+
 ## Step 1 — Parse invocation
 
 | User input | Behavior |

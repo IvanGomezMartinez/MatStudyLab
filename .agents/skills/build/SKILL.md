@@ -13,6 +13,8 @@ Read `LORE.md`, `AGENTS.md`, `docs/spec.md`, and `CONTEXT.md` before acting.
 Read and execute `.agents/skills/matstudylab-bootstrap/SKILL.md` before any other step.
 Do not proceed until bootstrap completes (sync, skip, or failed-with-continue).
 
+**Completion criterion:** bootstrap outcome identified (fresh, synced, or failed-with-continue).
+
 ## Step 1 — LORE onboarding (first run)
 
 If `LORE.md` is missing or lacks companion `.md` language / git workflow, ask the user and write answers to `LORE.md` from `docs/templates/LORE.md`.
@@ -78,7 +80,6 @@ New `codes/<type>/` folders require user confirmation; append folder map + decis
 - Never modify `codes/` without explicit user confirmation per bundle.
 - Never delete from `import/` except files cataloged in this session.
 - Never delete or overwrite measurement data outside the confirmed bundle folder move.
-- Invoke `matlab` and `matlab-performance-optimizer` skills when drafting or reviewing generated `.md` / script context.
 
 ## Reference
 

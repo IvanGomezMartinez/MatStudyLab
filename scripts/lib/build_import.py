@@ -6,6 +6,8 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
+from bundle_utils import base_markdown_files
+
 IMPORT_AREA = "import"
 CATALOG_AREA = "codes"
 
@@ -72,14 +74,6 @@ def homonym_exists(root: Path, type_name: str, bundle_name: str) -> bool:
     return (root / CATALOG_AREA / type_name / bundle_name).exists()
 
 
-def _base_markdown_files(bundle_dir: Path) -> list[Path]:
-    return [
-        path
-        for path in bundle_dir.glob("*.md")
-        if path.is_file() and not path.name.startswith("explain_")
-    ]
-
-
 def draft_companion_md(bundle_dir: Path, primary_script: Path) -> Path:
     companion = bundle_dir / f"{primary_script.stem}.md"
     if companion.exists():
@@ -128,7 +122,7 @@ def catalog_from_import(
 
     primary_script = next(path for path in moved if path.suffix == ".m")
     drafted = None
-    if not _base_markdown_files(destination):
+    if not base_markdown_files(destination):
         drafted = draft_companion_md(destination, primary_script)
 
     _cleanup_empty_import_dirs(resolved_source, import_root)
