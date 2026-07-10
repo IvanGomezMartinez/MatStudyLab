@@ -1,0 +1,13 @@
+# Local wayfinding / planning (not part of the template)
+.scratch/
+
+# Proprietary lab code — never commit
+codigosRealesNoSubir/
+
+# MATLAB
+*.asv
+*.m~
+
+# OS
+.DS_Store
+Thumbs.db
