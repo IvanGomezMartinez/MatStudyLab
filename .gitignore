@@ -1,6 +1,13 @@
 # Local wayfinding / planning (not part of the template)
 .scratch/
 
+# User-specific context (copy from docs/templates/LORE.md)
+LORE.md
+
+# Import intake — user scripts and data (keep folder marker only)
+import/**
+!import/.gitkeep
+
 # Local private MATLAB (never commit)
 codigosRealesNoSubir/
 

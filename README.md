@@ -1,10 +1,15 @@
 # MatStudyLab
 
+[![QA](https://github.com/IvanGomezMartinez/MatStudyLab/actions/workflows/qa.yml/badge.svg)](https://github.com/IvanGomezMartinez/MatStudyLab/actions/workflows/qa.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/IvanGomezMartinez/MatStudyLab)](https://github.com/IvanGomezMartinez/MatStudyLab/releases/latest)
+
 Structured MATLAB workspace for **optical lab technicians** — optometrists and imaging specialists who need reliable scripts and want to learn programming along the way.
 
-Use AI-assisted commands to **create**, **modify**, **catalog**, **import**, and **understand** MATLAB code for real laboratory work (MTF, PSF, IOL profiles, Zernike, and more). Every script ships with a companion `.md` that explains *why* it exists, *how* to run it, and *what optical context* it assumes.
+> **Template repository** — this repo provides folder structure, conventions, and AI workflow skills. It does **not** include proprietary laboratory MATLAB code. Your scripts live in **your** fork or clone, under your control.  
+> **Latest release:** [v1.0.0](https://github.com/IvanGomezMartinez/MatStudyLab/releases/tag/v1.0.0) · [Changelog](CHANGELOG.md)
 
-> **Template repository** — this repo provides folder structure, conventions, and AI workflow skills. It does **not** include proprietary laboratory MATLAB code. Your scripts live in **your** fork or clone, under your control.
+Use AI-assisted commands to **create**, **modify**, **catalog**, **import**, and **understand** MATLAB code for real laboratory work (MTF, PSF, IOL profiles, Zernike, and more). Every script ships with a companion `.md` that explains *why* it exists, *how* to run it, and *what optical context* it assumes.
 
 ## Who is this for?
 
@@ -51,9 +56,13 @@ Commands are implemented as user-invoked agent skills under `.agents/skills/` (s
 2. Open the folder in **Cursor** (or your preferred AI-enabled editor).
 3. Copy [docs/templates/LORE.md](docs/templates/LORE.md) to `LORE.md` and fill in your lab context.
 4. Dump existing scripts into `import/` and run `/build`, or use `/new` for fresh scripts.
-5. Study scripts with `/explain`; promote work with `/accept`.
+5. Study scripts with `/explain`; promote work with `/accept` or `/accept explain`.
 
 MATLAB R20xx or later is recommended. Required toolboxes depend on each script and are listed in its companion `.md`.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Run `./scripts/qa.sh` before opening a pull request.
 
 ## Documentation
 
