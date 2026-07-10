@@ -1,7 +1,7 @@
 # Local wayfinding / planning (not part of the template)
 .scratch/
 
-# Proprietary lab code — never commit
+# Local private MATLAB (never commit)
 codigosRealesNoSubir/
 
 # MATLAB

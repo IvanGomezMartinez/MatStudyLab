@@ -39,23 +39,22 @@ MatStudyLab is a private portfolio/template repository that provides folder stru
 21. As an optical lab technician, I want the AI to never edit `codes/` in place, so that my catalog cannot be corrupted by a single mistaken session.
 22. As an optical lab technician, I want new `codes/` subfolders proposed and confirmed with context saved to `LORE.md`, so that future classifications stay consistent.
 23. As a developer (Iván), I want the template repo to ship without proprietary `.m` files, so that users fork a clean structure and bring their own scripts.
-24. As a developer, I want `codigosRealesNoSubir/` gitignored for local E2E testing, so that real lab scripts never leak to upstream.
-25. As a developer, I want Matt Pocock engineering skills vendored in `.agents/skills/` with `skills-lock.json`, so that the workflow is reproducible across clones.
-26. As a developer, I want each command implemented as a user-invoked skill (`disable-model-invocation: true`), so that commands run only when explicitly requested.
-27. As a developer, I want command skills validated with `writing-great-skills`, so that agent behavior is consistent and auditable.
-28. As a developer, I want `matlab` and `matlab-performance-optimizer` skills invoked for code generation, so that scripts follow MathWorks best practices.
-29. As a developer, I want `grill-me` mandatory before `/new` and `/build` code generation, so that requirements are confirmed before any file is written.
-30. As a developer, I want `docs/matlab-guidelines.md` as the baseline with `LORE.md` overrides, so that personal style does not fork project conventions silently.
-31. As a developer, I want harness-agnostic skills under `.agents/skills/`, so that Cursor, Claude Code, or other agents can run the same commands.
-32. As a developer, I want incremental `/build` that deletes from `import/` only what was cataloged in the session, so that large imports can be processed over multiple days.
-33. As a developer, I want homonym detection when a bundle name already exists in `codes/`, so that imports do not silently overwrite catalog entries.
-34. As a developer, I want `/accept` to block when a bundle lacks `.m` or `.md`, so that incomplete work cannot enter the catalog.
-35. As a developer, I want bundle naming to support 1:1 (one `.m` per bundle), N:1 (multiple `.m` + one `.md`), or AI-proposed pipeline names with user confirmation, so that real lab folder structures map cleanly.
-36. As a developer, I want `explain/` as a study staging area separate from `modify/`, so that learning and editing workflows do not collide.
-37. As a developer, I want LORE decision log entries after confirmed folder moves, so that classification history is traceable.
-38. As a developer, I want README and `docs/development_guide.md` to document post-wayfinder workflow (`/to-tickets` → `/implement`), so that the next implementation phase is clear.
-39. As a developer, I want `matstudylab-bootstrap` to run automatically at the start of every workflow command (`/new`, `/build`, `/accept`, `/explain`, `/modify`) and sync `skills-lock.json` when stale (>24h), so that vendored skills stay current without a separate manual step.
-40. As a developer, I want E2E validation with a subset of `codigosRealesNoSubir/` through `import/` → `/build`, so that the full pipeline is proven on real lab scripts before release.
+24. As a developer, I want Matt Pocock engineering skills vendored in `.agents/skills/` with `skills-lock.json`, so that the workflow is reproducible across clones.
+25. As a developer, I want each command implemented as a user-invoked skill (`disable-model-invocation: true`), so that commands run only when explicitly requested.
+26. As a developer, I want command skills validated with `writing-great-skills`, so that agent behavior is consistent and auditable.
+27. As a developer, I want `matlab` and `matlab-performance-optimizer` skills invoked for code generation, so that scripts follow MathWorks best practices.
+28. As a developer, I want `grill-me` mandatory before `/new` and `/build` code generation, so that requirements are confirmed before any file is written.
+29. As a developer, I want `docs/matlab-guidelines.md` as the baseline with `LORE.md` overrides, so that personal style does not fork project conventions silently.
+30. As a developer, I want harness-agnostic skills under `.agents/skills/`, so that Cursor, Claude Code, or other agents can run the same commands.
+31. As a developer, I want incremental `/build` that deletes from `import/` only what was cataloged in the session, so that large imports can be processed over multiple days.
+32. As a developer, I want homonym detection when a bundle name already exists in `codes/`, so that imports do not silently overwrite catalog entries.
+33. As a developer, I want `/accept` to block when a bundle lacks `.m` or `.md`, so that incomplete work cannot enter the catalog.
+34. As a developer, I want bundle naming to support 1:1 (one `.m` per bundle), N:1 (multiple `.m` + one `.md`), or AI-proposed pipeline names with user confirmation, so that real lab folder structures map cleanly.
+35. As a developer, I want `explain/` as a study staging area separate from `modify/`, so that learning and editing workflows do not collide.
+36. As a developer, I want LORE decision log entries after confirmed folder moves, so that classification history is traceable.
+37. As a developer, I want README and `docs/development_guide.md` to document contributor workflow, so that new users know how to run commands and tests.
+38. As a developer, I want `matstudylab-bootstrap` to run automatically at the start of every workflow command (`/new`, `/build`, `/accept`, `/explain`, `/modify`) and sync `skills-lock.json` when stale (>24h), so that vendored skills stay current without a separate manual step.
+39. As a developer, I want E2E validation with a committed synthetic fixture through `import/` → `/build` → `/explain` → `/accept`, so that the full pipeline is proven without proprietary lab scripts in the repo.
 
 ## Implementation Decisions
 
@@ -63,7 +62,6 @@ MatStudyLab is a private portfolio/template repository that provides folder stru
 
 - **Template upstream:** empty `codes/` (`.gitkeep` only); MIT license for structure, docs, and skills.
 - **User fork/clone:** user adds scripts via `import/`, `/new`, or manual staging; proprietary content stays in their repo.
-- **`codigosRealesNoSubir/`:** local-only E2E test bank (~50 scripts); gitignored; never committed.
 
 ### Folder layout
 
@@ -168,7 +166,7 @@ T1  Scaffold + AGENTS.md + LORE.md template + docs/templates/
               ├─ T5  /build skill
               └─ T6  /new skill
                    └─ T7  /modify skill
-                        └─ T8  E2E: subset codigosRealesNoSubir → import/ → /build
+                        └─ T8  E2E: synthetic fixture → import/ → /build → /explain → /accept
 ```
 
 ## Testing Decisions
@@ -185,10 +183,9 @@ Test **external behavior** of the workflow — folder moves, file presence, safe
 
 | Layer | What | When |
 |-------|------|------|
-| **E2E pipeline** | Subset of `codigosRealesNoSubir/` → `import/` → `/build` → `/explain` → `/accept` | T8 — after all command skills exist |
+| **E2E pipeline** | Synthetic fixture → `import/` → `/build` → `/explain` → `/accept` | T8 — after all command skills exist |
 | **Safety assertions** | Agent session must not create/modify files under `codes/` except via `/accept` or confirmed `/build` move | Every command skill audit |
 | **Bootstrap** | Staleness check + sync runs as Step 0 of every workflow command (T3–T7); skipped when lockfile age ≤24h | T2 + every command skill audit |
-| **Template smoke** | Fresh clone has empty `codes/`, scaffold folders, templates, and readable spec | T1 |
 
 ### Prior art
 
@@ -209,7 +206,7 @@ Test **external behavior** of the workflow — folder moves, file presence, safe
 - Generic MATLAB training unrelated to optical lab work.
 - Web UI or app outside repo + AI editor workflow.
 - Re-litigating closed wayfinder decisions (see `.scratch/matstudylab/issues/`).
-- Committing `codigosRealesNoSubir/` or `.scratch/` content.
+- Committing `.scratch/` content.
 
 ## Further Notes
 
@@ -222,7 +219,7 @@ Test **external behavior** of the workflow — folder moves, file presence, safe
 
 ### Deferred work
 
-- Ticket 10: final inventory/classification of `codigosRealesNoSubir/` with end user (E2E input, not spec blocker).
+- Catalog semver / changelog policy (see Open questions).
 
 ### References
 
