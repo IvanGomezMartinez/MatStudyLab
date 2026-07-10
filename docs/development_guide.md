@@ -27,10 +27,12 @@ Wayfinding is **complete** (2026-07-10). Closed tickets live in `.scratch/matstu
 ```
 /to-spec      → docs/spec.md, CONTEXT.md, AGENTS.md, templates (DONE)
 /to-tickets   → T1–T8 tracer bullets with blocking edges
-/implement    → one ticket per fresh agent session
+/implement    → one ticket per fresh agent session (Pocock skill: .agents/skills/implement/)
 /audit        → quality gates per ticket
 /qa           → full validation when all tickets done
 ```
+
+**`/implement` sources:** ticket file under `.scratch/matstudylab/issues/` (or `tickets.md` frontier) plus `docs/spec.md`. No `docs/plans/` — that JIRA-style layout is not used in this repo.
 
 Run `/setup-matt-pocock-skills` if `docs/agents/` is missing (already scaffolded for local-markdown tracker).
 
