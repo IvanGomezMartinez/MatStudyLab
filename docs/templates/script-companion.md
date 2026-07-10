@@ -83,4 +83,4 @@ Plain-language notes on MATLAB ideas used here (vectors, `interp2`, `fft2`, …)
 4. Keep long theory here; keep `.m` to `%%` sections + parameters only.
 5. Console: document which key numbers appear (figures + `fprintf` per LORE).
 
-See `docs/templates/LORE.md` for the filled example (synthetic MTF) in the scratch prototype at `.scratch/matstudylab/assets/template-script-companion.md`.
+See `docs/templates/LORE.md` for the filled example (synthetic MTF). A longer scratch prototype may exist locally at `.scratch/matstudylab/assets/template-script-companion.md` (gitignored; not available on a fresh clone).

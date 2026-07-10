@@ -39,6 +39,7 @@ The type folder gives optical context; do not repeat magnitude in every filename
 | FFT/spectrum as the **goal** | `codes/fourier-transform/` |
 | IOL profiles, stitching | `codes/iol-profiles/` |
 | Zernike, wavefront | `codes/zernikes/` |
+| Moiré patterns | `codes/moire/` |
 
 Use `fourier-transform/` only when spectral analysis is the goal, not an intermediate step toward MTF/PSF.
 

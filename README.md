@@ -50,7 +50,7 @@ Commands are implemented as user-invoked agent skills (see [development guide](d
 1. **Fork or clone** this repository.
 2. Open the folder in **Cursor** (or your preferred AI-enabled editor).
 3. Copy [docs/templates/LORE.md](docs/templates/LORE.md) to `LORE.md` and fill in your lab context.
-4. Dump existing scripts into `import/` and run `/build`, or use `/new` for fresh scripts.
+4. Dump existing scripts into `import/` and run `/build`, or use `/new` for fresh scripts (command skills — see [development guide](docs/development_guide.md#implementation-ticket-order)).
 5. Study scripts with `/explain`; promote work with `/accept`.
 
 MATLAB R20xx or later is recommended. Required toolboxes depend on each script and are listed in its companion `.md`.

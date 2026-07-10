@@ -36,19 +36,26 @@ for folder in import new modify explain; do
   assert_exists "$folder/.gitkeep"
 done
 
+assert_exists "codes/.gitkeep"
+
 for type in "${seed_types[@]}"; do
   assert_exists "codes/$type/.gitkeep"
 done
 
-while IFS= read -r -d '' matlab_file; do
-  echo "FAIL: proprietary .m found in catalog: $matlab_file" >&2
+while IFS= read -r -d '' unexpected; do
+  echo "FAIL: codes/ must contain only .gitkeep placeholders: $unexpected" >&2
   failures=$((failures + 1))
-done < <(find codes -name '*.m' -print0 2>/dev/null || true)
+done < <(find codes -type f ! -name '.gitkeep' -print0 2>/dev/null || true)
 
-for doc in docs/spec.md CONTEXT.md docs/templates/LORE.md docs/templates/script-companion.md; do
+for doc in docs/spec.md CONTEXT.md README.md AGENTS.md docs/templates/LORE.md docs/templates/script-companion.md; do
   assert_exists "$doc"
   assert_readable "$doc"
 done
+
+if ! grep -q 'docs/templates/LORE.md' README.md; then
+  echo "FAIL: README must instruct copying docs/templates/LORE.md to LORE.md" >&2
+  failures=$((failures + 1))
+fi
 
 if [[ "$failures" -gt 0 ]]; then
   echo "Template smoke: $failures failure(s)" >&2

@@ -31,4 +31,4 @@ Read the file at the referenced path.
 
 - Wayfinder effort: `.scratch/matstudylab/`
 - Implementation PRD: `.scratch/matstudylab/PRD.md` (`ready-for-agent`)
-- Closed wayfinder tickets: `.scratch/matstudylab/issues/01`–`14`
+- Closed wayfinder tickets: `.scratch/matstudylab/issues/01`–`09`, `11`–`14` (ticket `10` deferred)
