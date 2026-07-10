@@ -73,7 +73,7 @@ Vendored in `.agents/skills/` per `skills-lock.json`:
 - Pocock engineering skills (`implement`, `to-tickets`, `grill-me`, …)
 - `matlab`, `matlab-performance-optimizer`
 
-Project commands — **`/accept`** and **`/explain`** implemented (T3–T4); `/build`, `/new`, `/modify` pending (T5–T7).
+Project commands — **`/accept`**, **`/explain`**, and **`/build`** implemented (T3–T5); `/new` and `/modify` pending (T6–T7).
 
 ## Template smoke (T1)
 
@@ -89,6 +89,7 @@ Validates staging folders, seed magnitude types under `codes/`, empty catalog (n
 ./scripts/test-bootstrap-skills.sh   # bootstrap staleness logic only
 ./scripts/test-accept-bundle.sh      # /accept promotion and validation
 ./scripts/test-explain-bundle.sh     # /explain paths and scaffold
+./scripts/test-build-import.sh       # /build scan, catalog, homonym
 ```
 
 ## Local E2E test bank
