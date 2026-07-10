@@ -41,7 +41,7 @@ See [docs/spec.md](docs/spec.md) for the full contract.
 | `/accept`  | Move approved bundles from `new/` or `modify/` into `codes/`; attach `explain_*.md` |
 | `/explain` | Deep-dive `explain_<stem>.md` — no `.m` changes |
 
-Commands are implemented as user-invoked agent skills (see [development guide](docs/development_guide.md) for implementation status).
+Commands are implemented as user-invoked agent skills under `.agents/skills/` (see [development guide](docs/development_guide.md)).
 
 **Safety:** the AI never edits `codes/` in place. All writes go through `new/`, `modify/`, or confirmed `/build` moves.
 
@@ -50,7 +50,7 @@ Commands are implemented as user-invoked agent skills (see [development guide](d
 1. **Fork or clone** this repository.
 2. Open the folder in **Cursor** (or your preferred AI-enabled editor).
 3. Copy [docs/templates/LORE.md](docs/templates/LORE.md) to `LORE.md` and fill in your lab context.
-4. Dump existing scripts into `import/` and run `/build`, or use `/new` for fresh scripts (command skills — see [development guide](docs/development_guide.md#implementation-ticket-order)).
+4. Dump existing scripts into `import/` and run `/build`, or use `/new` for fresh scripts.
 5. Study scripts with `/explain`; promote work with `/accept`.
 
 MATLAB R20xx or later is recommended. Required toolboxes depend on each script and are listed in its companion `.md`.

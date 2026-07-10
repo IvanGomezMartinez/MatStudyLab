@@ -75,6 +75,28 @@ Vendored in `.agents/skills/` per `skills-lock.json`:
 
 All five workflow commands implemented (T3–T7). **T8 E2E** — see [E2E pipeline validation](#e2e-pipeline-validation-t8) below.
 
+## QA (release validation)
+
+When tickets **15–22** are complete, run from the repository root:
+
+```bash
+./scripts/qa.sh
+```
+
+**Last run:** 2026-07-10 — **PASS** (template smoke + 7 test suites + skill presence + empty `codes/`).
+
+Checks:
+
+| Gate | Command / criterion |
+|------|---------------------|
+| Template scaffold | `./scripts/template-smoke.sh` |
+| Per-command seams | `test-bootstrap`, `test-accept`, `test-explain`, `test-build`, `test-new`, `test-modify` |
+| E2E pipeline | `./scripts/test-e2e-pipeline.sh` |
+| Project skills | `matstudylab-bootstrap`, `accept`, `explain`, `build`, `new`, `modify`, `matlab`, `matlab-performance-optimizer` |
+| Privacy | `codes/` has no `.m`; `codigosRealesNoSubir/` gitignored when present |
+
+**Manual follow-up (not automated):** one real bundle from `codigosRealesNoSubir/` through agent-invoked `/build` → `/explain` → `/accept` in Cursor.
+
 ## Template smoke (T1)
 
 From the repository root:
