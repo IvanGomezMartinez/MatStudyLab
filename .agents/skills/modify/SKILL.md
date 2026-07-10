@@ -41,11 +41,22 @@ If base companion `.md` is missing or incomplete, run the full `/new` checklist 
 
 **Completion criterion:** user confirmed intended changes.
 
-## Step 4 — Edit in `modify/` only
+## Step 4 — Edit in `modify/` only (with MATLAB skills)
 
 Apply changes to `.m` and companion `.md` under `modify/<type>/<bundle>/`.
 
-Invoke `.agents/skills/matlab/SKILL.md` and `.agents/skills/matlab-performance-optimizer/SKILL.md` when changing code.
+**Before editing any `.m` file, read and apply both vendored MATLAB skills:**
+
+| Skill | Path | Role |
+|-------|------|------|
+| **matlab** | `.agents/skills/matlab/SKILL.md` | Syntax, scripts, matrices, graphics, best practices |
+| **matlab-performance-optimizer** | `.agents/skills/matlab-performance-optimizer/SKILL.md` | Vectorization, memory, profiling when performance matters |
+
+These skills are **installed manually** in `.agents/skills/` (not synced by `matstudylab-bootstrap` for now — see deferred note below). If either file is missing, stop and tell the user to install them before editing code.
+
+**Completion criterion:** both skill files were read and their guidance applied to the changes.
+
+Then:
 
 - Rename `.m` + `.md` together if purpose changes (user confirmation).
 - Update `.md` history / relevant sections with each meaningful change.
@@ -72,3 +83,8 @@ Ask whether to promote now or keep iterating:
 
 - Wayfinder spec: `.scratch/matstudylab/issues/07-grilling-comando-modify.md`
 - Companion template: `docs/templates/script-companion.md`
+- MATLAB skills (mandatory): `.agents/skills/matlab/SKILL.md`, `.agents/skills/matlab-performance-optimizer/SKILL.md`
+
+### Deferred
+
+Auto-sync of MATLAB skills via `skills-lock.json` / bootstrap — out of scope for now; skills stay manually vendored.

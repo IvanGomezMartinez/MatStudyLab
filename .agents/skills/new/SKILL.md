@@ -46,18 +46,27 @@ Validate the filename:
 
 **Completion criterion:** user confirmed all five checklist items.
 
-## Step 3 — Generate with MATLAB skills
+## Step 3 — Generate with MATLAB skills (mandatory)
 
-Invoke `.agents/skills/matlab/SKILL.md` and `.agents/skills/matlab-performance-optimizer/SKILL.md` while writing the script.
+**Read and apply both vendored MATLAB skills** before writing or revising any `.m` file:
 
-Rules:
+| Skill | Path | Role |
+|-------|------|------|
+| **matlab** | `.agents/skills/matlab/SKILL.md` | Syntax, scripts, matrices, graphics, best practices |
+| **matlab-performance-optimizer** | `.agents/skills/matlab-performance-optimizer/SKILL.md` | Vectorization, memory, profiling when performance matters |
+
+These skills are **installed manually** in `.agents/skills/` (not synced by `matstudylab-bootstrap` for now — see deferred note below). If either file is missing, stop and tell the user to install them before generating code.
+
+**Completion criterion:** both skill files were read and their guidance applied to the script.
+
+Rules (after skills):
 
 - Optimal MATLAB per `docs/matlab-guidelines.md`; pedagogy in `.md`, not line comments in `.m`
 - `%%` sections only in `.m`; parameters in top `%% Parameters` block
 - Default to **scripts** (not functions) unless reuse requires otherwise
 - `snake_case` stem without verb prefix; bundle folder matches stem for 1:1 pairs
 
-**Completion criterion:** script content matches the grilled requirements.
+**Completion criterion:** script content matches the grilled requirements and MATLAB skills guidance.
 
 ## Step 4 — Scaffold output paths
 
@@ -98,4 +107,9 @@ when the bundle is ready for catalog promotion.
 
 - Wayfinder spec: `.scratch/matstudylab/issues/06-grilling-comando-new.md`
 - Companion template: `docs/templates/script-companion.md`
+- MATLAB skills (mandatory): `.agents/skills/matlab/SKILL.md`, `.agents/skills/matlab-performance-optimizer/SKILL.md`
 - Optional tools: `ask-matt`, `research` when design is unclear
+
+### Deferred
+
+Auto-sync of MATLAB skills via `skills-lock.json` / bootstrap — out of scope for now; skills stay manually vendored.

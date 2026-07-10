@@ -37,7 +37,7 @@ Single-context repo: `CONTEXT.md` at root; ADRs in `docs/adr/` when created. See
 Installed under `.agents/skills/` per `skills-lock.json`:
 
 - Pocock engineering: `to-spec`, `to-tickets`, `implement`, `grill-me`, `writing-great-skills`, etc.
-- MATLAB: `matlab`, `matlab-performance-optimizer`
+- MATLAB (manual vendoring): `matlab`, `matlab-performance-optimizer` — **required by `/new` and `/modify`**; read `.agents/skills/matlab/SKILL.md` and `.agents/skills/matlab-performance-optimizer/SKILL.md`
 - `matstudylab-bootstrap` — not user-facing; runs as Step 0 inside `/build`, `/new`, `/modify`, `/accept`, `/explain`
 
 All five workflow commands (`/accept`, `/explain`, `/build`, `/new`, `/modify`) are implemented (T3–T7).
@@ -47,4 +47,4 @@ All five workflow commands (`/accept`, `/explain`, `/build`, `/new`, `/modify`) 
 1. Read `LORE.md` (if present).
 2. Read `docs/spec.md` for the command or area in scope.
 3. Read `CONTEXT.md` for domain terms.
-4. For MATLAB generation: invoke `matlab` and `matlab-performance-optimizer` skills.
+4. For MATLAB generation (`/new`, `/modify`): **read and apply** `.agents/skills/matlab/SKILL.md` and `.agents/skills/matlab-performance-optimizer/SKILL.md` (manually vendored; bootstrap auto-sync deferred).

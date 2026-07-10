@@ -71,7 +71,7 @@ Implementation PRD: `.scratch/matstudylab/PRD.md` (`ready-for-agent`).
 Vendored in `.agents/skills/` per `skills-lock.json`:
 
 - Pocock engineering skills (`implement`, `to-tickets`, `grill-me`, …)
-- `matlab`, `matlab-performance-optimizer`
+- `matlab`, `matlab-performance-optimizer` — manually vendored; **mandatory for `/new` and `/modify`** (read both `SKILL.md` files). Bootstrap auto-sync for these: **deferred**.
 
 All five workflow commands implemented (T3–T7). Next: **ticket 22** E2E validation.
 
