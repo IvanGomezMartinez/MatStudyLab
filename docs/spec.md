@@ -133,7 +133,7 @@ On first run, if missing from `LORE.md`: companion `.md` language, git workflow 
 - N:1: ≥1 `.m` + one `.md`.
 - Block if `.m` missing; block if `.md` missing (offer to generate).
 - From `modify/`: replaces existing bundle in `codes/`.
-- Attaches `explain_*.md` from `explain/` when present.
+- Attaches `explain_*.md` from `explain/` when present, then removes them from `explain/`.
 
 ### Code quality
 

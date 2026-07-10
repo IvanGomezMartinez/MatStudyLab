@@ -9,6 +9,39 @@ from pathlib import Path
 from bundle_utils import base_markdown_files
 
 STAGING_AREAS = ("new", "modify")
+EXPLAIN_AREA = "explain"
+
+
+def _cleanup_empty_staging_dirs(start_dir: Path, staging_root: Path) -> None:
+    current = start_dir.resolve()
+    staging_root = staging_root.resolve()
+    while staging_root in current.parents or current == staging_root:
+        if current == staging_root:
+            break
+        if any(current.iterdir()):
+            break
+        current.rmdir()
+        current = current.parent
+
+
+def _attach_explain_docs(
+    root: Path,
+    destination: Path,
+    explain_docs: list[Path],
+    *,
+    dry_run: bool,
+) -> list[Path]:
+    attached: list[Path] = []
+    explain_root = root / EXPLAIN_AREA
+    for explain_doc in explain_docs:
+        target = destination / explain_doc.name
+        if not dry_run:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(explain_doc, target)
+            explain_doc.unlink()
+            _cleanup_empty_staging_dirs(explain_doc.parent, explain_root)
+        attached.append(target)
+    return attached
 
 
 @dataclass(frozen=True)
@@ -171,14 +204,17 @@ def accept_explain_attachments(
     dry_run: bool = False,
 ) -> list[Path]:
     attached: list[Path] = []
-    for explain_doc in list_pending_explain_attachments(
+    explain_docs = list_pending_explain_attachments(
         root, type_name=type_name, bundle_name=bundle_name
-    ):
+    )
+    for explain_doc in explain_docs:
         _, _, target = resolve_explain_attachment(root, explain_doc)
-        if not dry_run:
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(explain_doc, target)
-        attached.append(target)
+        if dry_run:
+            attached.append(target)
+            continue
+        attached.extend(
+            _attach_explain_docs(root, target.parent, [explain_doc], dry_run=False)
+        )
     return attached
 
 
@@ -206,11 +242,8 @@ def accept_bundle(root: Path, bundle: BundleRef, *, dry_run: bool = False) -> li
 
     shutil.copytree(source, destination)
 
-    attached: list[Path] = []
-    for explain_doc in explain_docs:
-        target = destination / explain_doc.name
-        shutil.copy2(explain_doc, target)
-        attached.append(target)
+    attached = _attach_explain_docs(root, destination, explain_docs, dry_run=False)
 
     shutil.rmtree(source)
+    _cleanup_empty_staging_dirs(source.parent, root / bundle.staging)
     return attached

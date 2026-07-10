@@ -52,7 +52,7 @@ Validation rules:
 - **1:1:** one `.m` + one `.md` with matching stems
 - **N:1:** multiple `.m` + exactly one base `.md`
 
-Promotion also copies matching `explain/explain_<stem>.md` files into the catalog bundle.
+Promotion also attaches matching `explain/explain_<stem>.md` files into the catalog bundle.
 
 ### Attach (`explain`)
 
@@ -64,7 +64,7 @@ For each `explain/explain_<stem>.md`:
 
 - Resolve `codes/<type>/<bundle>/` from path (`explain/<type>/<bundle>/…`) or by unique `codes/*/*/<stem>.m`
 - **Block** if catalog bundle or matching `.m` is missing
-- Copy into catalog; leave the source under `explain/`
+- Copy into catalog
 
 **Completion criterion:** every item in scope passes validation or the command stops with a clear block reason.
 
@@ -80,7 +80,12 @@ Confirm ambiguous `codes/<type>/<bundle>/` paths with the user. New `codes/<type
 ./scripts/accept-bundle.sh <variant> [type bundle]
 ```
 
-**Completion criterion:** promote — each bundle exists under `codes/` and staging is cleared; attach — each explain doc exists under its catalog bundle.
+After a successful run, clear staging for everything accepted:
+
+- **`new/` / `modify/`** — remove the promoted bundle folder (empty parent dirs too)
+- **`explain/`** — remove each attached `explain_<stem>.md` (empty parent dirs too)
+
+**Completion criterion:** each item exists under `codes/`; no accepted files remain in `new/`, `modify/`, or `explain/` for this run.
 
 ## Step 6 — Git per LORE
 
@@ -91,11 +96,13 @@ Confirm ambiguous `codes/<type>/<bundle>/` paths with the user. New `codes/<type
 
 **Completion criterion:** git behavior matches LORE.
 
-## Step 7 — LORE decision log (optional)
+## Step 7 — LORE updates (significant changes only)
 
-After successful accept, offer a one-line entry in LORE decision log.
+Append to `LORE.md` **only** when this accept introduced something that changes future behaviour — for example a new `codes/<type>/` folder, a reclassification, or a confirmed preference about units, equipment, or workflow.
 
-**Completion criterion:** user accepted or declined the log entry.
+Routine promote/attach (moving drafts or study docs into an existing bundle) does **not** warrant a decision-log entry. **Do not ask** the user about LORE unless a significant change occurred in this run.
+
+**Completion criterion:** LORE updated when warranted; otherwise proceed without mentioning the decision log.
 
 ## Safety (non-negotiable)
 

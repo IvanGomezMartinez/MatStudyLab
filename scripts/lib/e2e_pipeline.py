@@ -97,6 +97,8 @@ def run_pipeline(root: Path) -> E2EResult:
         raise AssertionError("accept did not attach explain doc to catalog bundle")
     if not attached:
         raise AssertionError("accept reported no explain attachments")
+    if explain_doc.is_file():
+        raise AssertionError("explain staging file was not removed after accept explain")
 
     return E2EResult(catalog_dir, explain_doc, accepted_explain)
 

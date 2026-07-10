@@ -94,5 +94,5 @@ It stores **your** lab context and preferences. Generic MATLAB rules live in `do
 1. **Read LORE first** — before generating or moving any script.
 2. **On first `/build` or `/new`** — if companion `.md` language is empty, ask and write here.
 3. **New manual folder in `codes/`** — user gives context → append row to "Folder map".
-4. **After confirmed `/accept` or `/build`** — optional one-line entry in "Decision log".
+4. **Decision log** — append only after **significant** changes (new `codes/<type>/`, reclassification, confirmed preference). Routine `/accept` or `/build` moves do not need a log entry.
 5. **Overrides** — LORE wins over `docs/matlab-guidelines.md` for personal style; never overrides safety "Never do".

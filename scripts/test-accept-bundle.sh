@@ -121,6 +121,10 @@ if [[ ! -f "$tmpdir/codes/mtf/sample_bundle/explain_through_focus_mtf.md" ]]; th
   echo "FAIL: explain doc missing after accept" >&2
   failures=$((failures + 1))
 fi
+if [[ -f "$tmpdir/explain/explain_through_focus_mtf.md" ]]; then
+  echo "FAIL: explain source still present after accept new" >&2
+  failures=$((failures + 1))
+fi
 if [[ -d "$tmpdir/new/mtf/sample_bundle" ]]; then
   echo "FAIL: staging not cleared after accept" >&2
   failures=$((failures + 1))
@@ -137,8 +141,8 @@ if [[ ! -f "$tmpdir/codes/mtf/sample_bundle/explain_through_focus_mtf.md" ]]; th
   echo "FAIL: explain doc missing after accept explain" >&2
   failures=$((failures + 1))
 fi
-if [[ ! -f "$tmpdir/explain/mtf/sample_bundle/explain_through_focus_mtf.md" ]]; then
-  echo "FAIL: explain source removed after accept explain" >&2
+if [[ -f "$tmpdir/explain/mtf/sample_bundle/explain_through_focus_mtf.md" ]]; then
+  echo "FAIL: explain source still present after accept explain" >&2
   failures=$((failures + 1))
 fi
 if [[ ! -d "$tmpdir/new/mtf/sample_bundle" ]]; then
