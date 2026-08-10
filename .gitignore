@@ -4,6 +4,9 @@
 # User-specific context (copy from docs/templates/LORE.md)
 LORE.md
 
+# Local skills sync preference (schema: docs/templates/skills-pref.example.json)
+.matstudylab/skills-pref.json
+
 # Import intake — user scripts and data (keep folder marker only)
 import/**
 !import/.gitkeep
