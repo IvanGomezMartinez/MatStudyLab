@@ -53,7 +53,7 @@ MatStudyLab is a private portfolio/template repository that provides folder stru
 35. As a developer, I want `explain/` as a study staging area separate from `modify/`, so that learning and editing workflows do not collide.
 36. As a developer, I want LORE decision log entries after confirmed folder moves, so that classification history is traceable.
 37. As a developer, I want README and `docs/development_guide.md` to document contributor workflow, so that new users know how to run commands and tests.
-38. As a developer, I want `matstudylab-bootstrap` to run automatically at the start of every workflow command (`/new`, `/build`, `/accept`, `/explain`, `/modify`) and sync `skills-lock.json` when stale (>24h), so that vendored skills stay current without a separate manual step.
+38. As a developer, I want `matstudylab-bootstrap` (orchestrator v2) to run as Step 0 of every workflow command (`/new`, `/build`, `/accept`, `/explain`, `/modify`), choosing setup or update from a preference sidecar (`mode` + `last_synced_at`, 24h freshness), syncing the full Pocock catalog plus both MATLAB skills when Node/`npx` is available, offering `/build` HITL (continue / `local-only` / open setup) when sync cannot complete, and supporting a release-only freshness check — so that vendored skills stay current without blocking work on machines without Node.
 39. As a developer, I want E2E validation with a committed synthetic fixture through `import/` → `/build` → `/explain` → `/accept`, so that the full pipeline is proven without proprietary lab scripts in the repo.
 
 ## Implementation Decisions
@@ -145,10 +145,12 @@ On first run, if missing from `LORE.md`: companion `.md` language, git workflow 
 
 ### Skills layout
 
-- Vendored in `.agents/skills/`: Pocock engineering skills, `matlab`, `matlab-performance-optimizer`.
-- `skills-lock.json` committed; includes `last_checked` (ISO timestamp) updated after each successful sync check.
-- **`matstudylab-bootstrap` (T2):** not a user-facing slash command. `disable-model-invocation: true`. Every workflow command skill (T3–T7) **must** start with **Step 0**: read and execute `.agents/skills/matstudylab-bootstrap/SKILL.md` — sync upstream skills when lockfile age >24h, skip when fresh, then proceed.
-- Project command skills (T3–T7): user-invoked, `writing-great-skills` validated, pointers to `docs/templates/` and `LORE.md`.
+- Vendored in `.agents/skills/`: full Pocock engineering catalog, `matlab`, `matlab-performance-optimizer`, plus owned command skills.
+- `skills-lock.json` committed (upstream-shaped only). Sync freshness lives in a **gitignored preference sidecar** (`mode`: `auto` | `local-only`, `last_synced_at`); schema example: `docs/templates/skills-pref.example.json`. Do not rely on a lockfile `last_checked` field (the skills CLI strips unknown keys).
+- **`matstudylab-bootstrap` (orchestrator v2):** not a user-facing slash command. `disable-model-invocation: true`. Every workflow command skill **must** start with **Step 0**: read and execute `.agents/skills/matstudylab-bootstrap/SKILL.md`. The script chooses **setup** (incomplete catalog → add Pocock `*` + both MATLAB skills with `--copy`) or **update** (`npx skills@latest update -p -y`; never `update <owner/repo>`), skips when fresh or `local-only`, and name-guards owned skills (`accept`, `build`, `explain`, `new`, `modify`, `matstudylab-bootstrap`) so they stay out of the lock.
+- **HITL:** `/build` presents continue-session / save `local-only` / open setup when sync cannot complete; other commands warn and continue on vendored skills. Successful setup/update sets `mode` to `auto` and stamps `last_synced_at`.
+- **Release:** maintainers run setup/update then `./scripts/check-vendor-release.sh` (fail if `last_synced_at` missing or >24h). Daily QA uses local integrity only (`./scripts/check-skills-integrity.sh`).
+- Project command skills: user-invoked, `writing-great-skills` validated, pointers to `docs/templates/` and `LORE.md`.
 
 ### Language policy
 
@@ -160,7 +162,7 @@ On first run, if missing from `LORE.md`: companion `.md` language, git workflow 
 
 ```
 T1  Scaffold + AGENTS.md + LORE.md template + docs/templates/
-    └─ T2  matstudylab-bootstrap skill (skills-lock sync ≤24h)
+    └─ T2  matstudylab-bootstrap skill (orchestrator v2; sidecar freshness ≤24h)
          └─ T3  /accept skill
               ├─ T4  /explain skill
               ├─ T5  /build skill
@@ -185,7 +187,7 @@ Test **external behavior** of the workflow — folder moves, file presence, safe
 |-------|------|------|
 | **E2E pipeline** | Synthetic fixture → `import/` → `/build` → `/explain` → `/accept` | T8 — after all command skills exist |
 | **Safety assertions** | Agent session must not create/modify files under `codes/` except via `/accept` or confirmed `/build` move | Every command skill audit |
-| **Bootstrap** | Staleness check + sync runs as Step 0 of every workflow command (T3–T7); skipped when lockfile age ≤24h | T2 + every command skill audit |
+| **Bootstrap** | Step 0 orchestrator v2: sidecar freshness (24h), setup\|update, Node gate, local integrity; `/build` HITL when sync blocked | Every command skill audit + bootstrap/release scripts |
 
 ### Prior art
 
@@ -220,6 +222,10 @@ Test **external behavior** of the workflow — folder moves, file presence, safe
 ### Deferred work
 
 - Catalog semver / changelog policy (see Open questions).
+
+### Skills restore fallback
+
+This template commits `.agents/skills/` file copies. Forks that commit **only** `skills-lock.json` may restore lock entries with `npx skills@latest experimental_install` (optional; not the default end-user path).
 
 ### References
 

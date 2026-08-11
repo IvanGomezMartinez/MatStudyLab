@@ -60,6 +60,10 @@ Commands are implemented as user-invoked agent skills under `.agents/skills/` (s
 
 MATLAB R20xx or later is recommended. Required toolboxes depend on each script and are listed in its companion `.md`.
 
+**Optional:** install [Node.js](https://nodejs.org/) (so `npx` is available). Vendored AI skills under `.agents/skills/` work without it. When Node is installed, workflow commands can auto-update those skills when you run them.
+
+**Skills sync preference:** choose **`local-only`** to keep using the vendored skills and skip network sync. On `/build`, if sync cannot run, you get three options: continue this session, save `local-only`, or open setup (install Node, then refresh skills).
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Run `./scripts/qa.sh` before opening a pull request.

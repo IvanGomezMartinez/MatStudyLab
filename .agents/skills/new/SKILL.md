@@ -11,9 +11,10 @@ Read `LORE.md`, `AGENTS.md`, `docs/spec.md`, `docs/matlab-guidelines.md`, and `C
 ## Step 0 — Bootstrap (mandatory)
 
 Read and execute `.agents/skills/matstudylab-bootstrap/SKILL.md` before any other step.
-Do not proceed until bootstrap completes (sync, skip, or failed-with-continue).
+Do not proceed until bootstrap completes (skip, setup/update, or warn-and-continue).
+On `NODE_MISSING` or `SYNC_FAILED_CONTINUE`: **warn + continue** with vendored skills only — no three-option HITL menu (that menu is `/build` only).
 
-**Completion criterion:** bootstrap outcome identified (fresh, synced, or failed-with-continue).
+**Completion criterion:** bootstrap outcome identified (skip, setup/update OK, or warn-and-continue).
 
 ## Step 1 — Read context
 

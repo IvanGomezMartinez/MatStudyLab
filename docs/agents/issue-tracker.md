@@ -32,3 +32,4 @@ Read the file at the referenced path.
 - Wayfinder effort: `.scratch/matstudylab/`
 - Implementation PRD: `.scratch/matstudylab/PRD.md` (`ready-for-agent`)
 - Closed wayfinder tickets: `.scratch/matstudylab/issues/01`–`09`, `11`–`14` (ticket `10` deferred)
+- Skills auto-provisioning v2: `.scratch/skills-auto-provisioning-v2/` — [map](../../.scratch/skills-auto-provisioning-v2/map.md), [PRD](../../.scratch/skills-auto-provisioning-v2/PRD.md) (`ready-for-agent`)
