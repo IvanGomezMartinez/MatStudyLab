@@ -63,9 +63,13 @@ Do not open a HITL menu on these commands.
 
 ### `/build`
 
-If `NODE_MISSING`, sync failed (`SYNC_FAILED_CONTINUE`), or incomplete setup (script would need setup / never synced OK), `/build` **must run HITL** per `.agents/skills/build/SKILL.md` (menu copy and preference writes are ticket 09 — do not invent a full menu here). On quiet success (`SETUP_OK` / `UPDATE_OK` / `SKIPPED_FRESH`), continue `/build` without a menu.
+Do **not** use the warn+continue strings above. After this skill finishes, `/build` **must** run its own **Step 1 — Skills HITL** in `.agents/skills/build/SKILL.md`:
 
-**Completion criterion:** for non-`/build` parents, any required English warning was shown (or no warn was needed); for `/build`, you either continued quietly or deferred to the `/build` HITL path; `NAME_GUARD_FAIL` never continues.
+- `SKIPPED_LOCAL_ONLY` → short notice + optional re-enable (`auto`)
+- `NODE_MISSING`, `SYNC_FAILED_CONTINUE`, or incomplete setup → three-option menu (continue session / save `local-only` / open setup)
+- Quiet success (`SETUP_OK` / `UPDATE_OK` / `SKIPPED_FRESH`) → one-line notice, no menu; ensure `mode: auto` after setup/update OK (`last_synced_at` stamped by the script)
+
+**Completion criterion:** for non-`/build` parents, any required English warning was shown (or no warn was needed); for `/build`, bootstrap outcome is captured so Step 1 HITL can run (or quiet success continues); `NAME_GUARD_FAIL` never continues.
 
 ## Step 4 — Continue workflow
 
@@ -97,4 +101,6 @@ Path: `.matstudylab/skills-pref.json` (gitignored; absence ⇒ `auto` and never 
 
 - Step 0 contract for new command skills: `docs/agents/command-skill-step-0.md`
 - Spec: `docs/spec.md` — Skills layout
-- Canonical English HITL / Node checklist copy (for `/build`): `.scratch/skills-auto-provisioning-v2/assets/prototype-node-gate-messages.md`
+- Canonical English HITL copy: `.scratch/skills-auto-provisioning-v2/assets/prototype-node-gate-messages.md`
+- OS install checklists: `docs/agents/skills-node-os-checklist.md`
+- Manual HITL verification: `docs/agents/build-skills-hitl-checklist.md`
