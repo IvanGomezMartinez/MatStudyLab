@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - Unreleased
+## [1.1.0] - 2026-08-11
 
 Skills auto-provisioning v2 — backward-compatible template enhancement.
 
@@ -47,4 +47,5 @@ First stable template release.
 - Template ships with an empty `codes/` catalog (`.gitkeep` only). Users bring their own MATLAB scripts in their fork or clone.
 - No automated MATLAB execution or optical numerical validation in this release.
 
+[1.1.0]: https://github.com/IvanGomezMartinez/MatStudyLab/releases/tag/v1.1.0
 [1.0.0]: https://github.com/IvanGomezMartinez/MatStudyLab/releases/tag/v1.0.0
