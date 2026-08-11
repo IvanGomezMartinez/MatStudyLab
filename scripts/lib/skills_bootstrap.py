@@ -24,53 +24,6 @@ OWNED_SKILL_NAMES = frozenset(
     }
 )
 
-SETUP_COMMANDS: tuple[tuple[str, ...], ...] = (
-    (
-        "npx",
-        "skills@latest",
-        "add",
-        "mattpocock/skills",
-        "--skill",
-        "*",
-        "-a",
-        "cursor",
-        "-y",
-        "--copy",
-    ),
-    (
-        "npx",
-        "skills@latest",
-        "add",
-        "https://github.com/k-dense-ai/claude-scientific-skills",
-        "--skill",
-        "matlab",
-        "-a",
-        "cursor",
-        "-y",
-        "--copy",
-    ),
-    (
-        "npx",
-        "skills@latest",
-        "add",
-        "https://github.com/matlab/skills",
-        "--skill",
-        "matlab-performance-optimizer",
-        "-a",
-        "cursor",
-        "-y",
-        "--copy",
-    ),
-)
-
-UPDATE_COMMAND: tuple[str, ...] = (
-    "npx",
-    "skills@latest",
-    "update",
-    "-p",
-    "-y",
-)
-
 SyncAction = Literal["local-only", "fresh", "setup", "update"]
 
 
@@ -123,12 +76,19 @@ def write_pref(path: Path, data: dict[str, Any]) -> None:
         handle.write("\n")
 
 
-def touch_last_synced_at(path: Path, now: datetime) -> str:
+def record_successful_sync(path: Path, now: datetime) -> str:
+    """Stamp last_synced_at and force mode auto after SETUP_OK / UPDATE_OK only."""
     data = load_pref(path)
     timestamp = format_timestamp(now)
+    data["mode"] = DEFAULT_MODE
     data["last_synced_at"] = timestamp
     write_pref(path, data)
     return timestamp
+
+
+def touch_last_synced_at(path: Path, now: datetime) -> str:
+    """Backward-compatible alias for tests that only need a timestamp write."""
+    return record_successful_sync(path, now)
 
 
 def load_lockfile(path: Path) -> dict:

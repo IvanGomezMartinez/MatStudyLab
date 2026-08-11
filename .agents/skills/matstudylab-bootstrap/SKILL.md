@@ -67,7 +67,8 @@ Do **not** use the warn+continue strings above. After this skill finishes, `/bui
 
 - `SKIPPED_LOCAL_ONLY` → short notice + optional re-enable (`auto`)
 - `NODE_MISSING`, `SYNC_FAILED_CONTINUE`, or incomplete setup → three-option menu (continue session / save `local-only` / open setup)
-- Quiet success (`SETUP_OK` / `UPDATE_OK` / `SKIPPED_FRESH`) → one-line notice, no menu; ensure `mode: auto` after setup/update OK (`last_synced_at` stamped by the script)
+- Quiet success (`SETUP_OK` / `UPDATE_OK`) → one-line notice, no menu; script sets `mode: auto` and stamps `last_synced_at`
+- Quiet skip (`SKIPPED_FRESH`) → one-line notice, no menu; **does not** refresh `last_synced_at` (real sync only)
 
 **Completion criterion:** for non-`/build` parents, any required English warning was shown (or no warn was needed); for `/build`, bootstrap outcome is captured so Step 1 HITL can run (or quiet success continues); `NAME_GUARD_FAIL` never continues.
 
@@ -95,7 +96,7 @@ Path: `.matstudylab/skills-pref.json` (gitignored; absence ⇒ `auto` and never 
 
 - Freshness uses **`last_synced_at`** (24h), **not** a lockfile `last_checked` field.
 - `mode: local-only` → `SKIPPED_LOCAL_ONLY` (no Node/network probe).
-- Successful setup/update stamps `last_synced_at`.
+- Successful setup/update stamps `last_synced_at` and forces `mode: auto`. `SKIPPED_FRESH` does **not** slide the timestamp.
 
 ### Pointers
 

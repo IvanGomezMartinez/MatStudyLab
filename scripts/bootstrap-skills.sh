@@ -83,13 +83,14 @@ action="$(printf '%s\n' "$decision" | awk -F= '/^action=/{print $2; exit}')"
 collisions="$(printf '%s\n' "$decision" | awk -F= '/^collisions=/{print $2; exit}')"
 
 stamp_pref() {
+  # Only call after SETUP_OK / UPDATE_OK — never on SKIPPED_FRESH (would slide the 24h window).
   python3 - "$PREF_FILE" "$NOW_ISO" <<'PY'
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path("scripts/lib")))
-from skills_bootstrap import touch_last_synced_at
+from skills_bootstrap import record_successful_sync
 
 pref_path = Path(sys.argv[1])
 now_iso = sys.argv[2]
@@ -98,7 +99,7 @@ now = (
     if now_iso
     else datetime.now(timezone.utc)
 )
-touch_last_synced_at(pref_path, now)
+record_successful_sync(pref_path, now)
 PY
 }
 
@@ -122,7 +123,6 @@ case "$action" in
     ;;
   fresh)
     echo "bootstrap: SKIPPED_FRESH"
-    stamp_pref
     ;;
   name-guard-fail)
     echo "bootstrap: NAME_GUARD_FAIL owned skill collision: ${collisions:-unknown}" >&2

@@ -183,7 +183,7 @@ from pathlib import Path
 print(json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))["last_synced_at"])
 PY
 )"
-assert_eq "SKIPPED_FRESH stamps last_synced_at" "2026-07-10T14:30:00.000Z" "$pref_after_fresh"
+assert_eq "SKIPPED_FRESH does not slide last_synced_at" "2026-07-10T14:00:00.000Z" "$pref_after_fresh"
 
 lock_after="$(python3 - "$tmpdir/skills-lock.json" <<'PY'
 import json
@@ -445,7 +445,26 @@ from pathlib import Path
 sys.path.insert(0, "scripts/lib")
 from skills_bootstrap import write_pref
 
-write_pref(Path(sys.argv[1]), {"mode": "auto", "last_synced_at": "2026-07-08T10:00:00.000Z"})
+# Start local-only to prove successful sync forces mode auto
+write_pref(
+    Path(sys.argv[1]),
+    {"mode": "local-only", "last_synced_at": "2026-07-08T10:00:00.000Z"},
+)
+PY
+
+# Force update path despite local-only by writing auto for decide… actually local-only short-circuits.
+# Use auto + stale stamp; assert mode stays auto after UPDATE_OK.
+python3 - "$pref_ok" <<'PY'
+import sys
+from pathlib import Path
+
+sys.path.insert(0, "scripts/lib")
+from skills_bootstrap import write_pref
+
+write_pref(
+    Path(sys.argv[1]),
+    {"mode": "auto", "last_synced_at": "2026-07-08T10:00:00.000Z"},
+)
 PY
 
 ok_output="$(
@@ -463,10 +482,31 @@ pref_after_ok="$(python3 - "$pref_ok" <<'PY'
 import json
 import sys
 from pathlib import Path
-print(json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))["last_synced_at"])
+data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+print(f"{data['mode']}|{data['last_synced_at']}")
 PY
 )"
-assert_eq "UPDATE_OK stamps last_synced_at" "2026-07-10T14:30:00.000Z" "$pref_after_ok"
+assert_eq "UPDATE_OK stamps and keeps auto" "auto|2026-07-10T14:30:00.000Z" "$pref_after_ok"
+
+# Successful sync from local-only via env override is not supported; unit-test record_successful_sync
+mode_force="$(
+  python3 - "$tmpdir/skills-pref-force-auto.json" <<'PY'
+import json
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+sys.path.insert(0, "scripts/lib")
+from skills_bootstrap import record_successful_sync, write_pref
+
+path = Path(sys.argv[1])
+write_pref(path, {"mode": "local-only", "last_synced_at": None})
+record_successful_sync(path, datetime(2026, 7, 10, 14, 30, tzinfo=timezone.utc))
+data = json.loads(path.read_text(encoding="utf-8"))
+print(f"{data['mode']}|{data['last_synced_at']}")
+PY
+)"
+assert_eq "record_successful_sync forces mode auto" "auto|2026-07-10T14:30:00.000Z" "$mode_force"
 
 # Successful setup stamps via fake npx (three adds)
 cat > "$fake_bin/npx" <<'EOF'
