@@ -162,7 +162,7 @@ On first run, if missing from `LORE.md`: companion `.md` language, git workflow 
 
 ```
 T1  Scaffold + AGENTS.md + LORE.md template + docs/templates/
-    └─ T2  matstudylab-bootstrap skill (skills-lock sync ≤24h)
+    └─ T2  matstudylab-bootstrap skill (orchestrator v2; sidecar freshness ≤24h)
          └─ T3  /accept skill
               ├─ T4  /explain skill
               ├─ T5  /build skill
