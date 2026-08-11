@@ -7,7 +7,7 @@
 Structured MATLAB workspace for **optical lab technicians** — optometrists and imaging specialists who need reliable scripts and want to learn programming along the way.
 
 > **Template repository** — this repo provides folder structure, conventions, and AI workflow skills. It does **not** include proprietary laboratory MATLAB code. Your scripts live in **your** fork or clone, under your control.  
-> **Latest release:** [v1.0.0](https://github.com/IvanGomezMartinez/MatStudyLab/releases/tag/v1.0.0) · [Changelog](CHANGELOG.md)
+> **Latest release:** [v1.1.0](https://github.com/IvanGomezMartinez/MatStudyLab/releases/tag/v1.1.0) · [Changelog](CHANGELOG.md)
 
 Use AI-assisted commands to **create**, **modify**, **catalog**, **import**, and **understand** MATLAB code for real laboratory work (MTF, PSF, IOL profiles, Zernike, and more). Every script ships with a companion `.md` that explains *why* it exists, *how* to run it, and *what optical context* it assumes.
 
