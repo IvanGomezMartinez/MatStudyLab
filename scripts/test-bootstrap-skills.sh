@@ -514,6 +514,75 @@ PY
 )"
 assert_eq "SETUP_OK stamps last_synced_at" "2026-07-10T14:30:00.000Z" "$pref_after_setup"
 
+# Local integrity (no network): real repo must pass
+integrity_out="$(./scripts/check-skills-integrity.sh 2>&1)"
+assert_contains "repo integrity OK" "skills-integrity: OK" "$integrity_out"
+
+# Integrity failure: missing locked skill on disk
+bad_root="$tmpdir/integrity-root"
+mkdir -p "$bad_root/.agents/skills"
+python3 - "$bad_root" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+(root / "skills-lock.json").write_text(
+    json.dumps({"version": 1, "skills": {"ghost-skill": {}}}, indent=2) + "\n",
+    encoding="utf-8",
+)
+# Owned skills present so only the locked ghost is reported
+for name in (
+    "accept",
+    "build",
+    "explain",
+    "new",
+    "modify",
+    "matstudylab-bootstrap",
+):
+    (root / ".agents/skills" / name).mkdir(parents=True)
+PY
+
+set +e
+bad_integrity="$(
+  python3 - "$bad_root" "$bad_root/skills-lock.json" "$bad_root/.matstudylab/skills-pref.json" <<'PY' 2>&1
+import sys
+from pathlib import Path
+
+sys.path.insert(0, "scripts/lib")
+from skills_bootstrap import check_local_integrity
+
+failures = check_local_integrity(
+    Path(sys.argv[1]), lock_path=Path(sys.argv[2]), pref_path=Path(sys.argv[3])
+)
+print("\n".join(failures) if failures else "none")
+sys.exit(1 if failures else 0)
+PY
+)"
+bad_status=$?
+set -e
+assert_eq "integrity missing locked skill exits 1" "1" "$bad_status"
+assert_contains "integrity reports ghost skill" "missing locked skill on disk: ghost-skill" "$bad_integrity"
+
+# Integrity: unreadable pref when present
+bad_pref="$tmpdir/bad-pref.json"
+printf '{not-json\n' > "$bad_pref"
+bad_pref_result="$(
+  python3 - "$ROOT" "$ROOT/skills-lock.json" "$bad_pref" <<'PY'
+import sys
+from pathlib import Path
+
+sys.path.insert(0, "scripts/lib")
+from skills_bootstrap import check_local_integrity
+
+failures = check_local_integrity(
+    Path(sys.argv[1]), lock_path=Path(sys.argv[2]), pref_path=Path(sys.argv[3])
+)
+print("\n".join(failures) if failures else "none")
+PY
+)"
+assert_contains "integrity flags bad pref JSON" "unreadable preference" "$bad_pref_result"
+
 if [[ "$failures" -gt 0 ]]; then
   echo "bootstrap-skills tests: $failures failure(s)" >&2
   exit 1

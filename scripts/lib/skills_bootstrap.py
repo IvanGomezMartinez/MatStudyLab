@@ -173,3 +173,73 @@ def decide_sync_action(
     if is_stale(pref.get("last_synced_at"), now):
         return "update"
     return "fresh"
+
+
+def skill_on_disk(skills_dir: Path, name: str) -> bool:
+    skill_path = skills_dir / name
+    return skill_path.is_dir() or (skill_path / "SKILL.md").is_file()
+
+
+def check_local_integrity(
+    repo_root: Path,
+    lock_path: Path | None = None,
+    pref_path: Path | None = None,
+) -> list[str]:
+    """Assert lock + on-disk skills; parse pref if present. No network."""
+    root = repo_root
+    lock_file = lock_path if lock_path is not None else root / "skills-lock.json"
+    pref_file = (
+        pref_path if pref_path is not None else root / ".matstudylab" / "skills-pref.json"
+    )
+    skills_dir = root / ".agents" / "skills"
+    failures: list[str] = []
+
+    if not lock_file.is_file():
+        failures.append(f"missing lockfile: {lock_file}")
+        return failures
+
+    try:
+        lock = load_lockfile(lock_file)
+    except (OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        failures.append(f"unreadable lockfile: {lock_file} ({exc})")
+        return failures
+
+    for name in sorted(lock_skills_map(lock)):
+        if not skill_on_disk(skills_dir, name):
+            failures.append(f"missing locked skill on disk: {name}")
+
+    for name in sorted(OWNED_SKILL_NAMES):
+        if not skill_on_disk(skills_dir, name):
+            failures.append(f"missing owned skill on disk: {name}")
+
+    if pref_file.is_file():
+        try:
+            with pref_file.open(encoding="utf-8") as handle:
+                raw = json.load(handle)
+            if not isinstance(raw, dict):
+                failures.append(f"preference is not an object: {pref_file}")
+            else:
+                # Ensure load_pref can normalize mode + last_synced_at
+                load_pref(pref_file)
+        except (OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
+            failures.append(f"unreadable preference: {pref_file} ({exc})")
+
+    return failures
+
+
+def release_freshness_ok(
+    pref_path: Path, now: datetime, stale_hours: int = STALE_HOURS
+) -> tuple[bool, str]:
+    """Release gate: last_synced_at must exist and be within stale_hours."""
+    if not pref_path.is_file():
+        return False, f"missing preference file: {pref_path}"
+    try:
+        pref = load_pref(pref_path)
+    except (OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        return False, f"unreadable preference: {pref_path} ({exc})"
+    last_synced_at = pref.get("last_synced_at")
+    if not last_synced_at:
+        return False, "last_synced_at is missing"
+    if is_stale(last_synced_at, now, stale_hours=stale_hours):
+        return False, f"last_synced_at is stale (> {stale_hours}h): {last_synced_at}"
+    return True, f"fresh last_synced_at: {last_synced_at}"

@@ -13,7 +13,9 @@ run() {
 }
 
 run ./scripts/validate-command-skills.sh
+run ./scripts/check-skills-integrity.sh
 run ./scripts/test-bootstrap-skills.sh
+run ./scripts/test-vendor-release.sh
 run ./scripts/test-accept-bundle.sh
 run ./scripts/test-explain-bundle.sh
 run ./scripts/test-build-import.sh

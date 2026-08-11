@@ -40,13 +40,17 @@ From the repository root:
 ./scripts/qa.sh
 ```
 
-Runs workflow seam tests only — command skill structure, bootstrap staleness, and per-command script behavior (`/accept`, `/explain`, `/build`, `/new`, `/modify`) plus the synthetic E2E pipeline. Does **not** run MATLAB or assert numerical correctness.
+Runs workflow seam tests only — command skill structure, **local skills integrity** (lock + on-disk skills; no upstream network), bootstrap staleness, release-check unit tests, and per-command script behavior (`/accept`, `/explain`, `/build`, `/new`, `/modify`) plus the synthetic E2E pipeline. Does **not** run MATLAB or assert numerical correctness. Does **not** enforce release freshness against the live preference sidecar.
+
+**Maintainer release (A+C):** after orchestrator setup/update and commit (A), run `./scripts/check-vendor-release.sh` (C) before tagging — fails if `last_synced_at` is missing or older than 24h. Override with `BOOTSTRAP_PREF` / `BOOTSTRAP_NOW_ISO` in tests only.
 
 Individual suites:
 
 ```bash
 ./scripts/validate-command-skills.sh
+./scripts/check-skills-integrity.sh
 ./scripts/test-bootstrap-skills.sh
+./scripts/test-vendor-release.sh
 ./scripts/test-accept-bundle.sh
 ./scripts/test-explain-bundle.sh
 ./scripts/test-build-import.sh
