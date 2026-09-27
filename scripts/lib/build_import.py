@@ -104,23 +104,40 @@ def catalog_from_import(
         )
 
     destination = root / CATALOG_AREA / type_name / bundle_name
-    files_to_move = sorted(
-        path for path in resolved_source.iterdir() if path.is_file()
+    entries_to_move = sorted(
+        path
+        for path in resolved_source.iterdir()
+        if not path.name.startswith(".") and (path.is_file() or path.is_dir())
     )
-    if not any(path.suffix == ".m" for path in files_to_move):
+    matlab_in_tree = any(
+        path.suffix == ".m"
+        for path in entries_to_move
+        if path.is_file()
+    ) or any(
+        path.suffix == ".m"
+        for path in entries_to_move
+        if path.is_dir()
+        for path in path.rglob("*.m")
+        if path.is_file() and not path.name.startswith(".")
+    )
+    if not matlab_in_tree:
         raise ValueError("bundle folder has no .m files")
 
     if dry_run:
-        return CatalogResult(destination, tuple(files_to_move), None)
+        return CatalogResult(destination, tuple(entries_to_move), None)
 
     destination.mkdir(parents=True, exist_ok=False)
     moved: list[Path] = []
-    for source_file in files_to_move:
-        target = destination / source_file.name
-        shutil.move(str(source_file), str(target))
+    for source_entry in entries_to_move:
+        target = destination / source_entry.name
+        shutil.move(str(source_entry), str(target))
         moved.append(target)
 
-    primary_script = next(path for path in moved if path.suffix == ".m")
+    primary_script = next(
+        path
+        for path in destination.rglob("*.m")
+        if path.is_file() and not path.name.startswith(".")
+    )
     drafted = None
     if not base_markdown_files(destination):
         drafted = draft_companion_md(destination, primary_script)

@@ -86,10 +86,16 @@
       "computedHash": "1001228c475a89d565d0059ebd64b3e922f93a87aad29becb8e358c0399880a7"
     },
     "matlab": {
-      "source": "k-dense-ai/claude-scientific-skills",
+      "source": "K-Dense-AI/scientific-agent-skills",
       "sourceType": "github",
       "skillPath": "skills/matlab/SKILL.md",
       "computedHash": "2fda17640b2cda0a5228fa668bfa99da56b8b9d84a74dbcb8f0a9816eaef2b2e"
+    },
+    "matplotlib": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/matplotlib/SKILL.md",
+      "computedHash": "101455fbb1fdee2c286a2ef378ee412c8505312e4338b7efc0bb36818d3031e0"
     },
     "matlab-performance-optimizer": {
       "source": "matlab/skills",
