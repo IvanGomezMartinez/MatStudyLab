@@ -82,7 +82,7 @@ Proceed with the parent command only after Steps 1–3. Do not re-run bootstrap 
 
 ### Setup vs update (script decides)
 
-- **Setup** — catalog missing / incomplete: adds full Pocock catalog plus `matlab` and `matlab-performance-optimizer` (copy into `.agents/skills/`).
+- **Setup** — catalog missing / incomplete: adds full Pocock catalog plus `matlab`, `matplotlib` (via `gh skill install` from K-Dense-AI/scientific-agent-skills), and `matlab-performance-optimizer` (copy into `.agents/skills/`).
 - **Update** — lock present and previously synced OK but stale: project-scoped `npx skills@latest update -p -y` (never pass a repo id as update positional).
 - Owned project skills (`matstudylab-bootstrap`, `accept`, `build`, `new`, `modify`, `explain`) are name-guarded and not updated by the catalog CLI.
 

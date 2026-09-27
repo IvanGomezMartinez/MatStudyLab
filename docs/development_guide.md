@@ -23,7 +23,7 @@ Supporting docs:
 Vendored in `.agents/skills/` per `skills-lock.json`:
 
 - Pocock engineering skills (`implement`, `to-tickets`, `grill-me`, …)
-- `matlab`, `matlab-performance-optimizer` — included in bootstrap setup/update; **mandatory to read both `SKILL.md` files for `/new` and `/modify`** (see [matlab-skills-gate.md](./agents/matlab-skills-gate.md))
+- `matlab`, `matplotlib`, `matlab-performance-optimizer` — included in bootstrap setup; **mandatory to read `matlab` + `matlab-performance-optimizer` for `/new` and `/modify`** (see [matlab-skills-gate.md](./agents/matlab-skills-gate.md)); `matplotlib` for Python plotting when relevant
 
 ### Orchestrator v2 and Step 0
 
@@ -81,8 +81,10 @@ Literal CLI (`skills@1.5.22+` contract):
 ```bash
 # Setup (incomplete / first-time catalog) — always --copy for public vendor
 npx skills@latest add mattpocock/skills --skill '*' -a cursor -y --copy
-npx skills@latest add https://github.com/k-dense-ai/claude-scientific-skills \
-  --skill matlab -a cursor -y --copy
+gh skill install K-Dense-AI/scientific-agent-skills skills/matlab \
+  --agent cursor --scope project -f
+gh skill install K-Dense-AI/scientific-agent-skills skills/matplotlib \
+  --agent cursor --scope project -f
 npx skills@latest add https://github.com/matlab/skills \
   --skill matlab-performance-optimizer -a cursor -y --copy
 

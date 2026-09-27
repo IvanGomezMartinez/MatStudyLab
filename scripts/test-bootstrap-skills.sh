@@ -508,12 +508,11 @@ PY
 )"
 assert_eq "record_successful_sync forces mode auto" "auto|2026-07-10T14:30:00.000Z" "$mode_force"
 
-# Successful setup stamps via fake npx (three adds)
+# Successful setup stamps via fake npx (Pocock + matlab-perf) + fake gh (matlab + matplotlib)
 cat > "$fake_bin/npx" <<'EOF'
 #!/usr/bin/env bash
 case "$*" in
   "skills@latest add mattpocock/skills --skill * -a cursor -y --copy") exit 0 ;;
-  "skills@latest add https://github.com/k-dense-ai/claude-scientific-skills --skill matlab -a cursor -y --copy") exit 0 ;;
   "skills@latest add https://github.com/matlab/skills --skill matlab-performance-optimizer -a cursor -y --copy") exit 0 ;;
   *)
     echo "unexpected setup npx: $*" >&2
@@ -522,6 +521,19 @@ case "$*" in
 esac
 EOF
 chmod +x "$fake_bin/npx"
+
+cat > "$fake_bin/gh" <<'EOF'
+#!/usr/bin/env bash
+case "$*" in
+  "skill install K-Dense-AI/scientific-agent-skills skills/matlab --agent cursor --scope project -f") exit 0 ;;
+  "skill install K-Dense-AI/scientific-agent-skills skills/matplotlib --agent cursor --scope project -f") exit 0 ;;
+  *)
+    echo "unexpected setup gh: $*" >&2
+    exit 2
+    ;;
+esac
+EOF
+chmod +x "$fake_bin/gh"
 
 pref_setup_ok="$tmpdir/skills-pref-setup-ok.json"
 python3 - "$pref_setup_ok" <<'PY'

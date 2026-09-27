@@ -38,6 +38,7 @@ Installed under `.agents/skills/` per `skills-lock.json`:
 
 - Pocock engineering: `to-spec`, `to-tickets`, `implement`, `grill-me`, `writing-great-skills`, etc.
 - MATLAB (manual vendoring): `matlab`, `matlab-performance-optimizer` — **required by `/new` and `/modify`**; read `.agents/skills/matlab/SKILL.md` and `.agents/skills/matlab-performance-optimizer/SKILL.md`
+- Also via bootstrap (`gh skill install`): `matplotlib` from `K-Dense-AI/scientific-agent-skills`
 - `matstudylab-bootstrap` — not user-facing; runs as Step 0 inside `/build`, `/new`, `/modify`, `/accept`, `/explain`
 
 All five workflow commands (`/accept`, `/explain`, `/build`, `/new`, `/modify`) are implemented (T3–T7).
